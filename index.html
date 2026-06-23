@@ -1223,6 +1223,65 @@
           document.getElementById("summary-phone").textContent = phoneVal;
           document.getElementById("summary-seat").textContent = seatVal;
 
+          // Disparo automático do WhatsApp em segundo plano
+          setTimeout(async () => {
+            try {
+              const ticketEl = document.getElementById("ticket-wrapper");
+              const originalShadow = ticketEl.querySelector("#event-ticket").style.boxShadow;
+              ticketEl.querySelector("#event-ticket").style.boxShadow = 'none';
+
+              const canvas = await html2canvas(ticketEl, {
+                backgroundColor: '#0B0F19',
+                scale: 2,
+                useCORS: true,
+                logging: false
+              });
+              ticketEl.querySelector("#event-ticket").style.boxShadow = originalShadow;
+
+              canvas.toBlob(async (blob) => {
+                if (!blob) return;
+                const fileName = `ingresso-${seatVal}-${Date.now()}.png`;
+
+                // Upload para o Supabase Storage (bucket 'ingressos')
+                const { data: uploadData, error: uploadError } = await supabaseClient
+                  .storage
+                  .from('ingressos')
+                  .upload(fileName, blob, {
+                    cacheControl: '3600',
+                    upsert: false
+                  });
+
+                if (uploadError) {
+                  console.warn("Upload falhou (crie o bucket público 'ingressos' no Supabase para ativar o envio automático):", uploadError.message);
+                } else {
+                  const { data } = supabaseClient
+                    .storage
+                    .from('ingressos')
+                    .getPublicUrl(fileName);
+                  const publicUrl = data.publicUrl;
+                  console.log("Ingresso enviado ao storage. URL:", publicUrl);
+
+                  // Chamar a API Serverless para enviar no WhatsApp
+                  const apiResponse = await fetch('/api/send-whatsapp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      name: nameVal,
+                      whatsapp: phoneVal,
+                      seat: seatVal,
+                      ticketCode: ticketCode,
+                      imageUrl: publicUrl
+                    })
+                  });
+                  const apiData = await apiResponse.json();
+                  console.log("Disparo automático do WhatsApp finalizado:", apiData);
+                }
+              }, 'image/png');
+            } catch (err) {
+              console.warn("Erro no processamento do envio automático do ingresso:", err);
+            }
+          }, 800);
+
           // Configura link de compartilhamento e envio do WhatsApp
           const shareBtn = document.getElementById("whatsapp-share-btn");
           const newShareBtn = shareBtn.cloneNode(true);
