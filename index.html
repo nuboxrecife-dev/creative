@@ -31,6 +31,40 @@
   
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="style.css">
+  
+  <style>
+    /* Seat Map Styles inlined for perfect robustness and zero caching issues */
+    .seat-occupied {
+      background-color: rgba(255, 255, 255, 0.07) !important;
+      border: 1px solid rgba(255, 255, 255, 0.03) !important;
+      color: #374151 !important;
+      cursor: not-allowed !important;
+      transition: all 0.2s ease;
+    }
+    .seat-available {
+      background-color: rgba(0, 71, 255, 0.15) !important;
+      border: 1px solid rgba(0, 71, 255, 0.4) !important;
+      color: #93c5fd !important;
+      cursor: pointer !important;
+      box-shadow: 0 0 5px rgba(0, 71, 255, 0.2) !important;
+      transition: all 0.3s ease;
+    }
+    .seat-available:hover {
+      background-color: rgba(0, 71, 255, 0.35) !important;
+      border-color: rgba(0, 71, 255, 0.7) !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 10px rgba(0, 71, 255, 0.5) !important;
+      transform: scale(1.2) !important;
+    }
+    .seat-selected {
+      background-color: #00f0ff !important;
+      border-color: #00f0ff !important;
+      color: #0b0f19 !important;
+      box-shadow: 0 0 12px #00f0ff !important;
+      transform: scale(1.25) !important;
+      transition: all 0.3s ease;
+    }
+  </style>
 </head>
 <body class="relative min-h-screen text-gray-100 bg-[#0B0F19] overflow-x-hidden font-sans">
 
@@ -821,6 +855,7 @@
           if (availableSeats.includes(seatId)) {
             seatButton.classList.add("seat-available");
             seatButton.addEventListener("click", () => {
+              console.log("Cadeira clicada:", seatId);
               if (selectedSeatId === seatId) {
                 seatButton.classList.remove("seat-selected");
                 selectedSeatId = null;
@@ -835,6 +870,7 @@
                 selectedSeatId = seatId;
                 seatBadgeEl.textContent = `Cadeira ${seatId}`;
                 seatInputEl.value = seatId;
+                console.log("Cadeira selecionada:", seatId, "Valor do input:", seatInputEl.value);
               }
             });
           } else {
