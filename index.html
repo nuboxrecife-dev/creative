@@ -1052,6 +1052,22 @@
       // Inicializa o mapa
       initSeatMap();
 
+      // Realtime Updates Subscription
+      function subscribeRealtime() {
+        supabaseClient
+          .channel('schema-db-changes')
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'epec_leads' },
+            (payload) => {
+              console.log("Mudança detectada no banco de dados:", payload);
+              initSeatMap();
+            }
+          )
+          .subscribe();
+      }
+      subscribeRealtime();
+
       // 3. Simulated Seat Loss countdown (Consistently updates grid and count)
       const countdownInterval = setInterval(() => {
         if (availableSeats.length > 3) {
