@@ -1150,6 +1150,22 @@
         submitBtn.innerHTML = `<span>Processando...</span>`;
 
         try {
+          // Verificar se o WhatsApp já está cadastrado
+          const { data: existingLeads, error: checkError } = await supabaseClient
+            .from('epec_leads')
+            .select('id, name')
+            .eq('whatsapp', phoneVal)
+            .limit(1);
+
+          if (checkError) {
+            console.error("Erro ao verificar número:", checkError);
+          } else if (existingLeads && existingLeads.length > 0) {
+            alert(`O WhatsApp ${phoneVal} já está cadastrado para o participante "${existingLeads[0].name}". Por favor, utilize outro número.`);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+            return;
+          }
+
           // Salvar inscrição no Supabase
           const { error } = await supabaseClient
             .from('epec_leads')

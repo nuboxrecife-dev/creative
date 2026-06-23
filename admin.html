@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - EPEC</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            epecBlue: '#0047FF',
+            techPurple: '#8B5CF6',
+            darkBg: '#0B0F19',
+            darkCard: '#151B2C',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  
+  <style>
+    /* Seat Grid custom styles for admin map */
+    .admin-seat-occupied {
+      background-color: rgba(139, 92, 246, 0.25) !important;
+      border: 1px solid rgba(139, 92, 246, 0.6) !important;
+      color: #c084fc !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease;
+    }
+    .admin-seat-occupied:hover {
+      background-color: rgba(139, 92, 246, 0.45) !important;
+      transform: scale(1.15) !important;
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.5) !important;
+    }
+    .admin-seat-available {
+      background-color: rgba(255, 255, 255, 0.03) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      color: #4b5563 !important;
+      cursor: default !important;
+    }
+    .admin-seat-selected {
+      background-color: #00f0ff !important;
+      border-color: #00f0ff !important;
+      color: #0b0f19 !important;
+      box-shadow: 0 0 12px #00f0ff !important;
+      transform: scale(1.2) !important;
+    }
+
+    #admin-seat-grid button {
+      width: 28px !important;
+      height: 28px !important;
+      font-size: 9px !important;
+    }
+  </style>
+</head>
+<body class="relative min-h-screen text-gray-100 bg-[#0B0F19] overflow-x-hidden font-sans">
+
+  <!-- Background decorative glows -->
+  <div class="absolute -right-20 -top-20 w-80 h-80 bg-epecBlue/10 rounded-full filter blur-3xl pointer-events-none"></div>
+  <div class="absolute -left-20 bottom-20 w-80 h-80 bg-techPurple/10 rounded-full filter blur-3xl pointer-events-none"></div>
+
+  <!-- 1. LOGIN SCREEN -->
+  <div id="login-container" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0B0F19] backdrop-blur-sm">
+    <div class="w-full max-w-md p-8 rounded-3xl bg-[#151B2C] border border-white/10 shadow-2xl text-center space-y-6">
+      
+      <div class="space-y-2">
+        <!-- Logo -->
+        <div class="flex items-center justify-center gap-2">
+          <span class="font-extrabold text-2xl text-white tracking-tight font-sans">ep<span class="text-epecBlue">ec</span></span>
+          <span class="w-2.5 h-2.5 rounded-full bg-techPurple"></span>
+        </div>
+        <h2 class="text-xl font-bold text-white">Acesso Restrito - Admin</h2>
+        <p class="text-xs text-gray-400">Insira a senha de administrador para gerenciar os cadastros.</p>
+      </div>
+
+      <form id="login-form" class="space-y-4 text-left">
+        <div class="space-y-1.5">
+          <label for="admin-password" class="text-[10px] font-extrabold text-gray-400 uppercase tracking-widest pl-1">Senha de Acesso</label>
+          <input type="password" id="admin-password" placeholder="Digite a senha..." required class="w-full bg-[#0B0F19] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-epecBlue focus:ring-2 focus:ring-epecBlue/20 transition duration-150">
+        </div>
+        <button type="submit" class="w-full bg-epecBlue hover:bg-[#003be0] text-white font-bold py-3.5 rounded-xl transition duration-150 text-sm shadow-md">
+          Entrar no Painel
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- 2. MAIN ADMIN DASHBOARD -->
+  <div id="dashboard-container" class="hidden min-h-screen flex flex-col">
+    
+    <!-- Navbar -->
+    <header class="border-b border-white/5 bg-[#151B2C]/50 backdrop-blur-md sticky top-0 z-40">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-2.5">
+          <span class="font-extrabold text-xl text-white tracking-tight">ep<span class="text-epecBlue">ec</span></span>
+          <span class="w-2 h-2 rounded-full bg-techPurple"></span>
+          <span class="text-xs font-semibold tracking-wider text-gray-400 uppercase border-l border-white/10 pl-3">Painel Admin</span>
+        </div>
+        <button id="logout-btn" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold px-4 py-2 rounded-xl transition duration-150">
+          Sair
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto w-full px-6 py-8 space-y-8">
+      
+      <!-- Metrics Grid -->
+      <section class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <!-- Metric 1 -->
+        <div class="bg-[#151B2C]/70 border border-white/10 rounded-2xl p-6 relative overflow-hidden">
+          <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Total de Inscritos</span>
+          <span id="metric-total" class="text-3xl font-black text-white mt-1 block">0</span>
+          <div class="absolute -right-4 -bottom-4 w-16 h-16 bg-epecBlue/10 rounded-full filter blur-md"></div>
+        </div>
+        <!-- Metric 2 -->
+        <div class="bg-[#151B2C]/70 border border-white/10 rounded-2xl p-6 relative overflow-hidden">
+          <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Cadeiras Disponíveis</span>
+          <span id="metric-available" class="text-3xl font-black text-[#00f0ff] mt-1 block">50</span>
+          <div class="absolute -right-4 -bottom-4 w-16 h-16 bg-techPurple/10 rounded-full filter blur-md"></div>
+        </div>
+        <!-- Metric 3 -->
+        <div class="bg-[#151B2C]/70 border border-white/10 rounded-2xl p-6 relative overflow-hidden">
+          <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Taxa de Ocupação</span>
+          <span id="metric-percent" class="text-3xl font-black text-green-400 mt-1 block">0%</span>
+          <div class="absolute -right-4 -bottom-4 w-16 h-16 bg-green-500/10 rounded-full filter blur-md"></div>
+        </div>
+      </section>
+
+      <!-- Dashboard Split Layout -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Side: Table & Search -->
+        <section class="lg:col-span-8 bg-[#151B2C]/40 border border-white/10 rounded-2xl p-6 space-y-6">
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <h3 class="text-lg font-bold text-white self-start">Lista de Participantes</h3>
+            
+            <!-- Filters & CSV Export -->
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+              <input type="text" id="search-input" placeholder="Buscar por nome, cadeira ou WhatsApp..." class="w-full sm:w-64 bg-[#0B0F19]/80 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-600 focus:outline-none focus:border-epecBlue transition duration-150">
+              <button id="export-csv-btn" class="bg-epecBlue hover:bg-[#003be0] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition duration-150 shadow-md flex items-center gap-2 flex-shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                <span>Exportar CSV</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Table Container -->
+          <div class="overflow-x-auto border border-white/5 rounded-xl">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-[#0c0f17] text-[10px] font-bold text-gray-500 uppercase tracking-wider border-b border-white/5">
+                  <th class="px-5 py-3.5">Nome</th>
+                  <th class="px-5 py-3.5">WhatsApp</th>
+                  <th class="px-5 py-3.5">Idade</th>
+                  <th class="px-5 py-3.5">Cadeira</th>
+                  <th class="px-5 py-3.5 text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="leads-table-body" class="divide-y divide-white/5 text-xs text-gray-300">
+                <!-- Injected dynamically -->
+                <tr>
+                  <td colspan="5" class="text-center py-8 text-gray-500 font-medium">Buscando cadastros no banco de dados...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Right Side: Seat Map & Details Panel -->
+        <section class="lg:col-span-4 space-y-6">
+          
+          <!-- Interactive Seat Map -->
+          <div class="bg-[#151B2C]/40 border border-white/10 rounded-2xl p-6">
+            <h3 class="text-lg font-bold text-white mb-4">Mapa de Assentos</h3>
+            
+            <div class="w-full text-center text-[7px] font-mono text-gray-600 border-b border-white/5 pb-2 mb-4 tracking-[0.2em] uppercase">
+              [ PALCO / TELA DE PROJEÇÃO ]
+            </div>
+
+            <!-- Seat grid -->
+            <div id="admin-seat-grid" class="grid grid-cols-10 gap-2.5 max-w-[340px] mx-auto w-full px-1">
+              <!-- Injected dynamically -->
+            </div>
+
+            <!-- Legend -->
+            <div class="flex items-center justify-center gap-4 mt-5 text-[8px] text-gray-500 font-mono">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-purple-500/30 border border-purple-500/60"></span> Reservado</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-white/5 border border-white/5"></span> Livre</span>
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-[#00f0ff]"></span> Foco</span>
+            </div>
+          </div>
+
+          <!-- Lead details card -->
+          <div id="details-card" class="bg-[#151B2C]/60 border border-white/10 rounded-2xl p-6 shadow-xl hidden relative overflow-hidden">
+            <div class="absolute -right-12 -top-12 w-24 h-24 bg-techPurple/10 rounded-full filter blur-xl"></div>
+            
+            <div class="relative z-10 space-y-4">
+              <div class="flex justify-between items-center border-b border-white/5 pb-2">
+                <span class="text-[9px] font-bold text-techPurple uppercase tracking-widest font-mono">Ficha do Participante</span>
+                <span id="details-seat" class="font-mono text-xs bg-epecBlue/20 text-[#00f0ff] border border-epecBlue/30 px-2 py-0.5 rounded font-black uppercase">---</span>
+              </div>
+              
+              <div class="space-y-3 text-xs">
+                <div>
+                  <span class="block text-[8px] text-gray-500 uppercase font-mono tracking-wider">Nome do Aluno</span>
+                  <span id="details-name" class="font-bold text-white block text-sm mt-0.5">---</span>
+                </div>
+                <div>
+                  <span class="block text-[8px] text-gray-500 uppercase font-mono tracking-wider">WhatsApp</span>
+                  <a id="details-phone-link" target="_blank" href="#" class="font-bold text-green-400 hover:underline inline-flex items-center gap-1 mt-0.5 font-sans">
+                    <span id="details-phone">---</span>
+                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.5-5.739-1.451L0 24zm6.59-4.846c1.657.982 3.411 1.499 5.341 1.5 5.518 0 10.011-4.486 10.014-9.997.002-2.67-1.03-5.18-2.903-7.052C17.168 1.733 14.658.7 12.012.7c-5.524 0-10.017 4.486-10.021 9.998-.001 1.93.504 3.813 1.464 5.46L2.457 22l6.19-1.624-.001-.001-.001.001zM17.96 14.86c-.326-.163-1.932-.953-2.226-1.06-.294-.107-.507-.16-.72.162-.213.325-.826 1.06-.1.113.313 1.06-1.06.326.163.633.27.653.275 1.08.13.21-.32.063-.53-.06-.826-.95-2.226-1.826-2.52-2.226-1.054-.36-.454-.53-.454-.53.136-.18.32-.42.48-.63.163-.21.217-.36.327-.54.11-.18.053-.34-.027-.5-.08-.16-.72-1.735-.986-2.38-.26-.625-.526-.54-.72-.55-.187-.01-.4-.01-.613-.01-.213 0-.56.08-.853.4-.293.32-1.12 1.1-1.12 2.678 0 1.578 1.147 3.1 1.307 3.32.16.22 2.257 3.447 5.467 4.836.763.33 1.357.527 1.82.674.767.243 1.467.21 2.02.127.617-.093 1.933-.79 2.2-1.513.267-.723.267-1.343.187-1.473-.08-.13-.293-.21-.62-.37z"/></svg>
+                  </a>
+                </div>
+                <div>
+                  <span class="block text-[8px] text-gray-500 uppercase font-mono tracking-wider">Faixa Etária</span>
+                  <span id="details-age" class="font-bold text-gray-200 block text-xs mt-0.5">---</span>
+                </div>
+                <div>
+                  <span class="block text-[8px] text-gray-500 uppercase font-mono tracking-wider">Data do Cadastro</span>
+                  <span id="details-date" class="font-bold text-gray-200 block text-xs mt-0.5 font-sans">---</span>
+                </div>
+              </div>
+
+              <!-- Delete Button in Detail Panel -->
+              <button id="details-delete-btn" class="w-full bg-red-600/20 hover:bg-red-600 border border-red-500/30 hover:border-red-500 text-red-200 hover:text-white font-bold py-2.5 rounded-xl transition duration-150 text-xs shadow-md mt-2 flex items-center justify-center gap-1.5">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                <span>Cancelar Inscrição</span>
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // Supabase Credentials
+    const supabaseUrl = "https://blunyljmskntlwyeyate.supabase.co";
+    const supabaseKey = "sb_publishable_cPvaQI56uXDVk2obUad1zQ_ZsUCiQYd";
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    // Global Admin Password
+    const ADMIN_PASSWORD_HASH = "adminEpec2026";
+
+    // Application State
+    let leadsList = [];
+    let focusedLead = null;
+
+    // Elements
+    const loginContainer = document.getElementById("login-container");
+    const dashboardContainer = document.getElementById("dashboard-container");
+    const loginForm = document.getElementById("login-form");
+    const adminPasswordInput = document.getElementById("admin-password");
+    const logoutBtn = document.getElementById("logout-btn");
+    
+    const metricTotal = document.getElementById("metric-total");
+    const metricAvailable = document.getElementById("metric-available");
+    const metricPercent = document.getElementById("metric-percent");
+    
+    const searchInput = document.getElementById("search-input");
+    const exportCsvBtn = document.getElementById("export-csv-btn");
+    const leadsTableBody = document.getElementById("leads-table-body");
+    const adminSeatGrid = document.getElementById("admin-seat-grid");
+
+    const detailsCard = document.getElementById("details-card");
+    const detailsSeat = document.getElementById("details-seat");
+    const detailsName = document.getElementById("details-name");
+    const detailsPhone = document.getElementById("details-phone");
+    const detailsPhoneLink = document.getElementById("details-phone-link");
+    const detailsAge = document.getElementById("details-age");
+    const detailsDate = document.getElementById("details-date");
+    const detailsDeleteBtn = document.getElementById("details-delete-btn");
+
+    // 1. Authentication Handlers
+    function checkAuth() {
+      const isAuth = sessionStorage.getItem("epec_admin_auth") === "true";
+      if (isAuth) {
+        loginContainer.classList.add("hidden");
+        dashboardContainer.classList.remove("hidden");
+        loadDashboardData();
+      } else {
+        loginContainer.classList.remove("hidden");
+        dashboardContainer.classList.add("hidden");
+      }
+    }
+
+    loginForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (adminPasswordInput.value === ADMIN_PASSWORD_HASH) {
+        sessionStorage.setItem("epec_admin_auth", "true");
+        adminPasswordInput.value = "";
+        checkAuth();
+      } else {
+        alert("Senha incorreta. Por favor, tente novamente.");
+        adminPasswordInput.value = "";
+        adminPasswordInput.focus();
+      }
+    });
+
+    logoutBtn.addEventListener("click", () => {
+      sessionStorage.removeItem("epec_admin_auth");
+      checkAuth();
+    });
+
+    // 2. Fetch Dashboard Data
+    async function loadDashboardData() {
+      try {
+        const { data, error } = await supabaseClient
+          .from('epec_leads')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        leadsList = data || [];
+        updateMetrics();
+        renderTable();
+        renderSeatMap();
+        
+        // Keep focus detail card updated if there's an edit
+        if (focusedLead) {
+          const updated = leadsList.find(l => l.id === focusedLead.id);
+          if (updated) {
+            showLeadDetails(updated);
+          } else {
+            hideLeadDetails();
+          }
+        }
+      } catch (err) {
+        console.error("Erro ao carregar dados:", err.message);
+        leadsTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-red-400 font-medium">Erro ao carregar os dados. Verifique a conexão com o banco de dados.</td></tr>`;
+      }
+    }
+
+    // 3. Update Metrics Grid
+    function updateMetrics() {
+      const totalCount = leadsList.length;
+      const availableCount = Math.max(0, 50 - totalCount);
+      const occupancyRate = (totalCount / 50) * 100;
+
+      metricTotal.textContent = totalCount;
+      metricAvailable.textContent = availableCount;
+      metricPercent.textContent = `${occupancyRate.toFixed(1)}%`;
+    }
+
+    // 4. Render Leads Table
+    function renderTable() {
+      const query = searchInput.value.toLowerCase().trim();
+      
+      const filteredLeads = leadsList.filter(lead => {
+        return (
+          lead.name.toLowerCase().includes(query) ||
+          lead.seat.toLowerCase().includes(query) ||
+          lead.whatsapp.includes(query)
+        );
+      });
+
+      if (filteredLeads.length === 0) {
+        leadsTableBody.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center py-8 text-gray-500 font-medium">Nenhum cadastro encontrado.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      leadsTableBody.innerHTML = filteredLeads.map(lead => {
+        const formattedDate = new Date(lead.created_at).toLocaleString('pt-BR', {
+          day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'
+        });
+        const cleanPhone = lead.whatsapp.replace(/\D/g, "");
+        const formattedAge = lead.age_group === "12-17" ? "12-17 anos" : lead.age_group === "18-25" ? "18-25 anos" : "Outra";
+
+        return `
+          <tr class="hover:bg-white/[0.02] transition duration-150 cursor-pointer" onclick="selectLeadFromTable(${lead.id})">
+            <td class="px-5 py-4 font-bold text-white truncate max-w-[180px]">${lead.name}</td>
+            <td class="px-5 py-4 font-mono font-medium">${lead.whatsapp}</td>
+            <td class="px-5 py-4">${formattedAge}</td>
+            <td class="px-5 py-4"><span class="font-extrabold text-[#00f0ff] uppercase tracking-wider">${lead.seat}</span></td>
+            <td class="px-5 py-4 text-right" onclick="event.stopPropagation()">
+              <div class="flex items-center justify-end gap-3.5">
+                <a target="_blank" href="https://api.whatsapp.com/send?phone=55${cleanPhone}&text=Ol%C3%A1%20${encodeURIComponent(lead.name)}!%20Confirmamos%20seu%20cadastro%20no%20treinamento%20EPEC." class="text-green-400 hover:text-green-300 font-semibold flex items-center gap-1" title="Enviar WhatsApp">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.5-5.739-1.451L0 24zm6.59-4.846c1.657.982 3.411 1.499 5.341 1.5 5.518 0 10.011-4.486 10.014-9.997.002-2.67-1.03-5.18-2.903-7.052C17.168 1.733 14.658.7 12.012.7c-5.524 0-10.017 4.486-10.021 9.998-.001 1.93.504 3.813 1.464 5.46L2.457 22l6.19-1.624-.001-.001-.001.001zM17.96 14.86c-.326-.163-1.932-.953-2.226-1.06-.294-.107-.507-.16-.72.162-.213.325-.826 1.06-.1.113.313 1.06-1.06.326.163.633.27.653.275 1.08.13.21-.32.063-.53-.06-.826-.95-2.226-1.826-2.52-2.226-1.054-.36-.454-.53-.454-.53.136-.18.32-.42.48-.63.163-.21.217-.36.327-.54.11-.18.053-.34-.027-.5-.08-.16-.72-1.735-.986-2.38-.26-.625-.526-.54-.72-.55-.187-.01-.4-.01-.613-.01-.213 0-.56.08-.853.4-.293.32-1.12 1.1-1.12 2.678 0 1.578 1.147 3.1 1.307 3.32.16.22 2.257 3.447 5.467 4.836.763.33 1.357.527 1.82.674.767.243 1.467.21 2.02.127.617-.093 1.933-.79 2.2-1.513.267-.723.267-1.343.187-1.473-.08-.13-.293-.21-.62-.37z"/></svg>
+                </a>
+                <button onclick="deleteLead(${lead.id}, '${lead.name}', '${lead.seat}')" class="text-red-400 hover:text-red-300 font-semibold" title="Cancelar Inscrição">
+                  Excluir
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // 5. Select Lead from Table Click
+    function selectLeadFromTable(id) {
+      const lead = leadsList.find(l => l.id === id);
+      if (lead) {
+        showLeadDetails(lead);
+        highlightSeat(lead.seat);
+      }
+    }
+
+    // 6. Highlight seat in map
+    function highlightSeat(seatId) {
+      const buttons = adminSeatGrid.querySelectorAll("button");
+      buttons.forEach(btn => {
+        if (btn.getAttribute("data-seat-id") === seatId) {
+          btn.classList.add("admin-seat-selected");
+        } else {
+          btn.classList.remove("admin-seat-selected");
+        }
+      });
+    }
+
+    // 7. Render Seat Map
+    function renderSeatMap() {
+      const rows = ["A", "B", "C", "D", "E"];
+      const seatsPerRow = 10;
+
+      adminSeatGrid.innerHTML = "";
+
+      // Create a map of occupied seats: seatId -> lead
+      const occupiedMap = {};
+      leadsList.forEach(lead => {
+        occupiedMap[lead.seat] = lead;
+      });
+
+      rows.forEach(row => {
+        for (let num = 1; num <= seatsPerRow; num++) {
+          const seatId = `${row}-${num}`;
+          const seatButton = document.createElement("button");
+          seatButton.type = "button";
+          seatButton.className = "rounded font-mono font-bold flex items-center justify-center transition-all duration-200";
+          seatButton.textContent = seatId;
+          seatButton.setAttribute("data-seat-id", seatId);
+
+          if (occupiedMap[seatId]) {
+            seatButton.classList.add("admin-seat-occupied");
+            
+            // Hover details / click details
+            seatButton.addEventListener("click", () => {
+              showLeadDetails(occupiedMap[seatId]);
+              highlightSeat(seatId);
+            });
+            
+            // If it is the currently focused lead, add selection border
+            if (focusedLead && focusedLead.seat === seatId) {
+              seatButton.classList.add("admin-seat-selected");
+            }
+          } else {
+            seatButton.classList.add("admin-seat-available");
+            seatButton.disabled = true;
+          }
+          adminSeatGrid.appendChild(seatButton);
+        }
+      });
+    }
+
+    // 8. Details Panel Manager
+    function showLeadDetails(lead) {
+      focusedLead = lead;
+      detailsSeat.textContent = lead.seat;
+      detailsName.textContent = lead.name;
+      detailsPhone.textContent = lead.whatsapp;
+      
+      const cleanPhone = lead.whatsapp.replace(/\D/g, "");
+      detailsPhoneLink.href = `https://api.whatsapp.com/send?phone=55${cleanPhone}&text=Ol%C3%A1%20${encodeURIComponent(lead.name)}!%20Ingresso%20EPEC%20confirmado.`;
+
+      const formattedAge = lead.age_group === "12-17" ? "12 a 17 anos" : lead.age_group === "18-25" ? "18 a 25 anos" : "Outra idade";
+      detailsAge.textContent = formattedAge;
+
+      const formattedDate = new Date(lead.created_at).toLocaleString('pt-BR', {
+        day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+      detailsDate.textContent = formattedDate;
+
+      // Delete action in panel
+      detailsDeleteBtn.onclick = () => deleteLead(lead.id, lead.name, lead.seat);
+
+      detailsCard.classList.remove("hidden");
+    }
+
+    function hideLeadDetails() {
+      focusedLead = null;
+      detailsCard.classList.add("hidden");
+    }
+
+    // 9. Delete Lead (Cancel Registration)
+    async function deleteLead(id, name, seat) {
+      const confirmDelete = confirm(`Deseja realmente cancelar a inscrição de "${name}" (Cadeira ${seat})? Esta ação liberará a cadeira e não poderá ser desfeita.`);
+      if (!confirmDelete) return;
+
+      try {
+        const { error } = await supabaseClient
+          .from('epec_leads')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+
+        alert(`Inscrição de "${name}" cancelada e assento ${seat} liberado!`);
+        
+        // Hide details card if it was the deleted lead
+        if (focusedLead && focusedLead.id === id) {
+          hideLeadDetails();
+        }
+
+        // Refresh data
+        loadDashboardData();
+      } catch (err) {
+        console.error("Erro ao deletar lead:", err.message);
+        alert("Erro ao excluir inscrição: " + err.message);
+      }
+    }
+
+    // 10. Search Trigger
+    searchInput.addEventListener("input", () => {
+      renderTable();
+    });
+
+    // 11. Export to CSV Handler
+    exportCsvBtn.addEventListener("click", () => {
+      if (leadsList.length === 0) {
+        alert("Não existem cadastros para exportar.");
+        return;
+      }
+
+      // CSV Header
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "ID;Data/Hora;Nome;WhatsApp;Faixa Etaria;Assento\r\n";
+
+      // CSV Rows
+      leadsList.forEach(lead => {
+        const formattedDate = new Date(lead.created_at).toLocaleString('pt-BR');
+        const formattedAge = lead.age_group === "12-17" ? "12 a 17 anos" : lead.age_group === "18-25" ? "18 a 25 anos" : "Outra";
+        
+        // Clean name to avoid CSV breaking
+        const cleanName = lead.name.replace(/;/g, ",");
+        
+        csvContent += `${lead.id};${formattedDate};${cleanName};${lead.whatsapp};${formattedAge};${lead.seat}\r\n`;
+      });
+
+      // Download link trigger
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "inscritos_epec.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+
+    // Initialize application on load
+    checkAuth();
+  </script>
+</body>
+</html>
