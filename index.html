@@ -858,7 +858,7 @@
   <script>
     const supabaseUrl = "https://blunyljmskntlwyeyate.supabase.co";
     const supabaseKey = "sb_publishable_cPvaQI56uXDVk2obUad1zQ_ZsUCiQYd";
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     document.addEventListener("DOMContentLoaded", () => {
       
@@ -896,7 +896,7 @@
       async function initSeatMap() {
         let bookedSeats = [];
         try {
-          const { data, error } = await supabase.from('epec_leads').select('seat');
+          const { data, error } = await supabaseClient.from('epec_leads').select('seat');
           if (error) {
             console.error("Erro ao buscar assentos:", error);
           } else if (data) {
@@ -1066,7 +1066,7 @@
 
         try {
           // Salvar inscrição no Supabase
-          const { error } = await supabase
+          const { error } = await supabaseClient
             .from('epec_leads')
             .insert([
               {
