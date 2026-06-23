@@ -496,16 +496,22 @@
 
       try {
         // Save to Supabase
-        const { error } = await supabaseClient
+        const { data, error } = await supabaseClient
           .from('epec_leads')
           .update({
             sales_status: selectedStatus,
             sales_comments: commentVal,
             sales_updated_at: new Date().toISOString()
           })
-          .eq('id', selectedLead.id);
+          .eq('id', selectedLead.id)
+          .select();
 
         if (error) throw error;
+
+        if (!data || data.length === 0) {
+          alert(`Erro: A atualização falhou no banco de dados. Isso ocorre porque a política SQL de UPDATE (RLS) não foi ativada para acesso público no painel do Supabase.\n\nPor favor, execute o seguinte comando no SQL Editor do seu Supabase:\n\ncreate policy "Permitir atualização anônima de leads" on public.epec_leads for update to anon using (true) with check (true);`);
+          return;
+        }
 
         // Visual alert feedback
         const savedLeadName = selectedLead.name;
