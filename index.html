@@ -64,6 +64,50 @@
       transform: scale(1.25) !important;
       transition: all 0.3s ease;
     }
+
+    /* Responsive Mobile Seat Map Tuning */
+    #seat-grid {
+      gap: 4px !important;
+      max-width: 260px !important;
+    }
+    #seat-grid button {
+      width: 21px !important;
+      height: 21px !important;
+      font-size: 8px !important;
+    }
+    @media (min-width: 360px) {
+      #seat-grid {
+        gap: 5px !important;
+        max-width: 290px !important;
+      }
+      #seat-grid button {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 8.5px !important;
+      }
+    }
+    @media (min-width: 400px) {
+      #seat-grid {
+        gap: 6px !important;
+        max-width: 320px !important;
+      }
+      #seat-grid button {
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 9px !important;
+      }
+    }
+    @media (min-width: 640px) {
+      #seat-grid {
+        gap: 8px !important;
+        max-width: 360px !important;
+      }
+      #seat-grid button {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 10px !important;
+      }
+    }
   </style>
 </head>
 <body class="relative min-h-screen text-gray-100 bg-[#0B0F19] overflow-x-hidden font-sans">
@@ -91,8 +135,8 @@
     </div>
 
     <!-- Header -->
-    <header class="relative z-40 w-full border-b border-white/5 bg-[#0B0F19]/45 backdrop-blur-md">
-      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <header id="main-header" class="sticky top-0 z-[100] w-full border-b border-white/5 bg-[#0B0F19]/70 backdrop-blur-lg transition-all duration-300">
+      <div class="max-w-7xl mx-auto px-6 py-3.5 md:py-4 flex items-center justify-between transition-all duration-300" id="header-container">
         <!-- Logo -->
         <a href="#" class="flex items-center gap-3 group">
           <svg class="h-8 md:h-10 w-auto text-white fill-current transition-transform duration-300 group-hover:scale-105" viewBox="0 0 160 50" xmlns="http://www.w3.org/2000/svg">
@@ -103,16 +147,31 @@
             <line x1="102" y1="18" x2="115" y2="28" stroke="#0047FF" stroke-width="2.5" />
             <circle cx="115" cy="28" r="3.5" fill="#0047FF" />
           </svg>
-          <span class="hidden sm:inline-block text-[11px] font-semibold tracking-widest text-gray-400 uppercase border-l border-white/10 pl-3 leading-tight">
+          <span class="hidden lg:inline-block text-[10px] font-semibold tracking-widest text-gray-400 uppercase border-l border-white/10 pl-3 leading-tight">
             Escola Pernambucana<br>de Economia Criativa
           </span>
         </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-6 text-xs font-semibold text-gray-300">
+          <a href="#simulador-ia" class="hover:text-epecBlue transition duration-200">Simulador</a>
+          <a href="#beneficios" class="hover:text-epecBlue transition duration-200">Benefícios</a>
+          <a href="#cronograma" class="hover:text-epecBlue transition duration-200">Cronograma</a>
+          <a href="#faq" class="hover:text-epecBlue transition duration-200">Dúvidas</a>
+        </nav>
         
-        <!-- Counter Badge -->
-        <div class="flex items-center gap-2 bg-[#151B2C]/80 border border-white/10 px-4 py-2 rounded-full backdrop-blur-md">
-          <span class="text-xs text-gray-400 font-medium">Vagas Restantes:</span>
-          <span id="vagas-contador" class="text-sm font-bold text-red-500 animate-pulse">8</span>
-          <span class="text-xs text-gray-500">/ 50</span>
+        <!-- Right side badge & CTA -->
+        <div class="flex items-center gap-4">
+          <!-- Counter Badge -->
+          <div class="flex items-center gap-2 bg-[#151B2C]/80 border border-white/10 px-3.5 py-1.5 rounded-full backdrop-blur-md text-xs">
+            <span class="text-[10px] text-gray-400 font-medium hidden sm:inline">Vagas Restantes:</span>
+            <span id="vagas-contador" class="font-bold text-red-500 animate-pulse">8</span>
+            <span class="text-gray-500">/ 50</span>
+          </div>
+          <!-- Header CTA -->
+          <a href="#inscricao" class="hidden sm:inline-flex bg-epecBlue hover:bg-[#003be0] text-white text-xs font-bold px-4 py-2 rounded-lg transition duration-200 shadow-[0_0_10px_rgba(0,71,255,0.2)]">
+            Garantir Vaga
+          </a>
         </div>
       </div>
     </header>
@@ -330,7 +389,7 @@
   </section>
 
   <!-- Benefits Section -->
-  <section class="relative z-30 py-24 bg-gradient-to-b from-[#0B0F19] via-[#0E1323] to-[#0B0F19] border-t border-b border-white/5">
+  <section id="beneficios" class="relative z-30 py-24 bg-gradient-to-b from-[#0B0F19] via-[#0E1323] to-[#0B0F19] border-t border-b border-white/5">
     <div class="max-w-7xl mx-auto px-6">
       
       <!-- Section Title -->
@@ -396,7 +455,7 @@
   </section>
 
   <!-- Interactive Timeline/Schedule Section -->
-  <section class="relative z-30 py-24 bg-gradient-to-b from-[#0B0F19] to-[#090D17] border-b border-white/5">
+  <section id="cronograma" class="relative z-30 py-24 bg-gradient-to-b from-[#0B0F19] to-[#090D17] border-b border-white/5">
     <div class="max-w-5xl mx-auto px-6">
       
       <!-- Section Title -->
@@ -544,7 +603,7 @@
     <div class="max-w-xl mx-auto px-6">
       
       <!-- Form Card Container with Futuristic Neon / Glass Design -->
-      <div class="reveal-item glass-panel relative p-8 md:p-10 rounded-3xl overflow-hidden border border-white/12 shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
+      <div class="reveal-item glass-panel relative px-4 py-8 sm:p-8 md:p-10 rounded-3xl overflow-hidden border border-white/12 shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
         
         <!-- Subtle Glow in background -->
         <div class="absolute -right-20 -bottom-20 w-52 h-52 bg-epecBlue/15 rounded-full filter blur-3xl pointer-events-none"></div>
@@ -670,7 +729,7 @@
   </section>
 
   <!-- FAQ Accordion Section -->
-  <section class="relative z-30 py-24 bg-gradient-to-b from-[#090D17] to-[#0B0F19] border-t border-white/5">
+  <section id="faq" class="relative z-30 py-24 bg-gradient-to-b from-[#090D17] to-[#0B0F19] border-t border-white/5">
     <div class="max-w-4xl mx-auto px-6">
       
       <!-- Section Title -->
@@ -814,48 +873,34 @@
         e.target.value = value;
       });
 
-      // 2. Simulated Counter countdown
-      let currentSeats = 8;
-      const counterEl = document.getElementById("vagas-contador");
-      
-      const countdownInterval = setInterval(() => {
-        if (currentSeats > 3) {
-          currentSeats -= Math.random() > 0.7 ? 1 : 0;
-          counterEl.textContent = currentSeats;
-          
-          if (currentSeats <= 3) {
-            counterEl.classList.remove("text-red-500");
-            counterEl.classList.add("text-red-600", "scale-110");
-          }
-        } else {
-          clearInterval(countdownInterval);
-        }
-      }, 25000);
-
-      // 3. Seat Map Initialization and Interactive Handling
+      // 2. Seat Map Initialization and Interactive Handling
       const seatGridEl = document.getElementById("seat-grid");
       const seatBadgeEl = document.getElementById("selected-seat-badge");
       const seatInputEl = document.getElementById("selected-seat");
+      const counterEl = document.getElementById("vagas-contador");
       
       const rows = ["A", "B", "C", "D", "E"];
       const seatsPerRow = 10;
       
       const availableSeats = ["A-3", "B-5", "C-2", "C-8", "D-6", "E-2", "E-8", "E-9"];
+      let currentSeats = availableSeats.length;
       let selectedSeatId = null;
+
+      // Initialize counter with actual count
+      counterEl.textContent = currentSeats;
 
       rows.forEach(row => {
         for (let num = 1; num <= seatsPerRow; num++) {
           const seatId = `${row}-${num}`;
           const seatButton = document.createElement("button");
           seatButton.type = "button";
-          seatButton.className = "w-6 h-6 sm:w-7 sm:h-7 rounded text-[9px] font-mono font-bold flex items-center justify-center transition-all duration-300 relative z-20 pointer-events-auto";
+          seatButton.className = "rounded font-mono font-bold flex items-center justify-center transition-all duration-300 relative z-20 pointer-events-auto";
           seatButton.textContent = seatId;
           seatButton.setAttribute("data-seat-id", seatId);
 
           if (availableSeats.includes(seatId)) {
             seatButton.classList.add("seat-available");
             seatButton.addEventListener("click", () => {
-              console.log("Cadeira clicada:", seatId);
               if (selectedSeatId === seatId) {
                 seatButton.classList.remove("seat-selected");
                 selectedSeatId = null;
@@ -870,7 +915,6 @@
                 selectedSeatId = seatId;
                 seatBadgeEl.textContent = `Cadeira ${seatId}`;
                 seatInputEl.value = seatId;
-                console.log("Cadeira selecionada:", seatId, "Valor do input:", seatInputEl.value);
               }
             });
           } else {
@@ -881,7 +925,80 @@
         }
       });
 
-      // 4. Form Submission Handling with Success Modal Popup
+      // 3. Simulated Seat Loss countdown (Consistently updates grid and count)
+      const countdownInterval = setInterval(() => {
+        if (availableSeats.length > 3) {
+          const randomIdx = Math.floor(Math.random() * availableSeats.length);
+          const seatId = availableSeats.splice(randomIdx, 1)[0];
+          
+          const bookedBtn = seatGridEl.querySelector(`[data-seat-id="${seatId}"]`);
+          if (bookedBtn) {
+            bookedBtn.classList.remove("seat-selected", "seat-available");
+            bookedBtn.classList.add("seat-occupied");
+            bookedBtn.disabled = true;
+          }
+
+          currentSeats = availableSeats.length;
+          counterEl.textContent = currentSeats;
+          
+          if (currentSeats <= 3) {
+            counterEl.classList.remove("text-red-500");
+            counterEl.classList.add("text-red-600", "scale-110");
+            clearInterval(countdownInterval);
+          }
+        } else {
+          clearInterval(countdownInterval);
+        }
+      }, 35000);
+
+      // 4. Live Notification Toast (Social Proof / FOMO)
+      const toastEl = document.getElementById("live-notification");
+      const toastTitleEl = document.getElementById("toast-title");
+      const toastBodyEl = document.getElementById("toast-body");
+
+      const namesList = ["Lucas G.", "Mariana S.", "Thiago M.", "Beatriz R.", "Felipe C.", "Amanda L.", "Rafael O.", "Juliana P.", "Mateus H.", "Sofia V."];
+      const locationsList = ["Recife Antigo", "Boa Viagem", "Olinda", "Jaboatão", "Madalena", "Espinheiro", "Candeias", "Casa Forte", "Pina", "Imbiribeira"];
+      const seatsList = ["A-3", "B-5", "C-2", "C-8", "D-6", "E-2", "E-8", "E-9"];
+
+      function showLiveNotification() {
+        const name = namesList[Math.floor(Math.random() * namesList.length)];
+        const loc = locationsList[Math.floor(Math.random() * locationsList.length)];
+        const seat = availableSeats.length > 0 ? availableSeats[Math.floor(Math.random() * availableSeats.length)] : seatsList[Math.floor(Math.random() * seatsList.length)];
+
+        toastBodyEl.innerHTML = `<strong>${name}</strong> (${loc}) acabou de escolher o assento <strong class="text-[#00f0ff]">${seat}</strong>.`;
+        
+        toastEl.classList.remove("translate-y-24", "opacity-0");
+        toastEl.classList.add("translate-y-0", "opacity-100");
+
+        setTimeout(() => {
+          toastEl.classList.remove("translate-y-0", "opacity-100");
+          toastEl.classList.add("translate-y-24", "opacity-0");
+        }, 5000);
+      }
+
+      setTimeout(() => {
+        showLiveNotification();
+        setInterval(showLiveNotification, 18000);
+      }, 6000);
+
+      // 5. Navbar Scroll Shrink and Glow Effect
+      const headerEl = document.getElementById("main-header");
+      const headerContainerEl = document.getElementById("header-container");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 50) {
+          headerEl.classList.add("bg-[#0B0F19]/95", "shadow-[0_10px_30px_rgba(0,0,0,0.5)]", "border-b", "border-white/10");
+          headerEl.classList.remove("bg-[#0B0F19]/70");
+          headerContainerEl.classList.replace("py-3.5", "py-2");
+          headerContainerEl.classList.replace("md:py-4", "md:py-2.5");
+        } else {
+          headerEl.classList.remove("bg-[#0B0F19]/95", "shadow-[0_10px_30px_rgba(0,0,0,0.5)]", "border-b", "border-white/10");
+          headerEl.classList.add("bg-[#0B0F19]/70");
+          headerContainerEl.classList.replace("py-2", "py-3.5");
+          headerContainerEl.classList.replace("md:py-2.5", "md:py-4");
+        }
+      });
+
+      // 6. Form Submission Handling with Success Modal Popup
       const form = document.getElementById("lead-form");
       const successModal = document.getElementById("success-modal");
       const closeModalBtn = document.getElementById("close-modal-btn");
@@ -923,16 +1040,14 @@
         const bookedBtn = seatGridEl.querySelector(`[data-seat-id="${seatVal}"]`);
         if (bookedBtn) {
           bookedBtn.classList.remove("seat-selected", "seat-available");
-          bookedBtn.classList.add("seat-occupied", "text-gray-700");
+          bookedBtn.classList.add("seat-occupied");
           bookedBtn.disabled = true;
           const idx = availableSeats.indexOf(seatVal);
           if (idx > -1) availableSeats.splice(idx, 1);
         }
 
-        if (currentSeats > 3) {
-          currentSeats -= 1;
-          counterEl.textContent = currentSeats;
-        }
+        currentSeats = availableSeats.length;
+        counterEl.textContent = currentSeats;
 
         successModal.classList.remove("hidden");
         form.reset();
@@ -945,7 +1060,7 @@
         successModal.classList.add("hidden");
       });
 
-      // 5. Real-time Countdown Timer (sessionStorage-persisted CRO trigger)
+      // 7. Real-time Countdown Timer (sessionStorage-persisted CRO trigger)
       const countdownEl = document.getElementById("countdown-timer");
       if (countdownEl) {
         let targetTime = sessionStorage.getItem("epec_countdown_target");
@@ -1297,5 +1412,16 @@
       printCustomLog();
     }
   </script>
+  <!-- Live Notification Toast -->
+  <div id="live-notification" class="fixed bottom-6 left-6 z-[100] flex items-center gap-3 bg-[#151B2C]/95 border border-white/10 p-3.5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] backdrop-blur-md max-w-sm transform translate-y-24 opacity-0 transition-all duration-500 pointer-events-none sm:pointer-events-auto">
+    <div class="w-9 h-9 rounded-full bg-epecBlue/20 border border-epecBlue/40 flex items-center justify-center text-epecBlue flex-shrink-0">
+      <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+    </div>
+    <div class="text-[11px] leading-relaxed">
+      <p class="font-bold text-white" id="toast-title">Nova Inscrição!</p>
+      <p class="text-gray-400 text-[10px]" id="toast-body">Lucas G. (Recife) acabou de escolher o assento A-3.</p>
+    </div>
+  </div>
+
 </body>
 </html>

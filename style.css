@@ -143,13 +143,27 @@ body {
   transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@keyframes borderRotate {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 .neon-border::before {
   content: '';
   position: absolute;
   inset: -1px;
   border-radius: 1.3rem;
   padding: 1px;
-  background: linear-gradient(135deg, var(--epec-blue), var(--tech-purple));
+  background: linear-gradient(90deg, var(--epec-blue), var(--tech-purple), var(--epec-blue));
+  background-size: 200% 200%;
+  animation: borderRotate 6s linear infinite;
   -webkit-mask: 
      linear-gradient(#fff 0 0) content-box, 
      linear-gradient(#fff 0 0);
