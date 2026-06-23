@@ -38,6 +38,9 @@
   <!-- Supabase JS Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
   <style>
     /* Seat Grid custom styles for admin map */
     .admin-seat-occupied {
@@ -145,6 +148,25 @@
           <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Taxa de Ocupação</span>
           <span id="metric-percent" class="text-3xl font-black text-green-400 mt-1 block">0%</span>
           <div class="absolute -right-4 -bottom-4 w-16 h-16 bg-green-500/10 rounded-full filter blur-md"></div>
+        </div>
+      </section>
+
+      <!-- Analytics Charts Section -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Chart 1: Funil Comercial -->
+        <div class="bg-[#151B2C]/70 border border-white/10 rounded-2xl p-6 relative overflow-hidden flex flex-col items-center">
+          <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest font-mono mb-4 self-start">Acompanhamento Comercial (Funil)</h4>
+          <div class="w-full max-w-[280px] h-[220px] relative">
+            <canvas id="commercial-status-chart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Faixa Etária -->
+        <div class="bg-[#151B2C]/70 border border-white/10 rounded-2xl p-6 relative overflow-hidden flex flex-col items-center">
+          <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest font-mono mb-4 self-start">Perfil dos Participantes (Faixa Etária)</h4>
+          <div class="w-full max-w-[340px] h-[220px] relative col-span-1">
+            <canvas id="age-group-chart"></canvas>
+          </div>
         </div>
       </section>
 
@@ -282,6 +304,8 @@
     // Application State
     let leadsList = [];
     let focusedLead = null;
+    let commercialChart = null;
+    let ageChart = null;
 
     // Elements
     const loginContainer = document.getElementById("login-container");
@@ -355,6 +379,7 @@
         updateMetrics();
         renderTable();
         renderSeatMap();
+        updateCharts();
         
         // Keep focus detail card updated if there's an edit
         if (focusedLead) {
@@ -634,6 +659,141 @@
           }
         )
         .subscribe();
+    }
+
+    // 13. Chart.js Initialization
+    function initCharts() {
+      // 1. Commercial Status Chart (Doughnut)
+      const commCtx = document.getElementById('commercial-status-chart').getContext('2d');
+      commercialChart = new Chart(commCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Confirmado', 'Pensando', 'Sem Resposta', 'Desistiu', 'Pendente'],
+          datasets: [{
+            data: [0, 0, 0, 0, 0],
+            backgroundColor: [
+              'rgba(34, 197, 94, 0.7)',  // Green
+              'rgba(234, 179, 8, 0.7)',  // Yellow
+              'rgba(249, 115, 22, 0.7)',  // Orange
+              'rgba(239, 68, 68, 0.7)',   // Red
+              'rgba(107, 114, 128, 0.7)'  // Gray
+            ],
+            borderColor: [
+              '#22c55e', '#eab308', '#f97316', '#ef6868', '#6b7280'
+            ],
+            borderWidth: 1.5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: '#9ca3af',
+                font: { size: 9, family: 'Plus Jakarta Sans' },
+                boxWidth: 10,
+                padding: 8
+              }
+            }
+          }
+        }
+      });
+
+      // 2. Age Group Chart (Bar)
+      const ageCtx = document.getElementById('age-group-chart').getContext('2d');
+      ageChart = new Chart(ageCtx, {
+        type: 'bar',
+        data: {
+          labels: ['12-17 anos', '18-25 anos', 'Outra'],
+          datasets: [{
+            label: 'Alunos',
+            data: [0, 0, 0],
+            backgroundColor: 'rgba(0, 71, 255, 0.6)',
+            borderColor: '#0047FF',
+            borderWidth: 1.5,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#9ca3af', font: { size: 9 } }
+            },
+            y: {
+              grid: { color: 'rgba(255, 255, 255, 0.05)' },
+              ticks: { color: '#9ca3af', font: { size: 9 }, stepSize: 1 }
+            }
+          }
+        }
+      });
+    }
+
+    function updateCharts() {
+      if (!commercialChart || !ageChart) {
+        initCharts();
+      }
+
+      // 1. Calculate status distribution
+      const statusCounts = {
+        'Confirmado': 0,
+        'Pensando': 0,
+        'Sem Resposta': 0,
+        'Desistiu': 0,
+        'Pendente': 0
+      };
+
+      // 2. Calculate age distribution
+      const ageCounts = {
+        '12-17': 0,
+        '18-25': 0,
+        'Outra': 0
+      };
+
+      leadsList.forEach(lead => {
+        // Status
+        const status = lead.sales_status || 'Pendente';
+        if (status === 'Em Atendimento') {
+          statusCounts['Pendente']++;
+        } else if (statusCounts[status] !== undefined) {
+          statusCounts[status]++;
+        } else {
+          statusCounts['Pendente']++;
+        }
+
+        // Age Group
+        const age = lead.age_group || 'Outra';
+        if (ageCounts[age] !== undefined) {
+          ageCounts[age]++;
+        } else {
+          ageCounts['Outra']++;
+        }
+      });
+
+      // Update commercial chart
+      commercialChart.data.datasets[0].data = [
+        statusCounts['Confirmado'],
+        statusCounts['Pensando'],
+        statusCounts['Sem Resposta'],
+        statusCounts['Desistiu'],
+        statusCounts['Pendente']
+      ];
+      commercialChart.update();
+
+      // Update age chart
+      ageChart.data.datasets[0].data = [
+        ageCounts['12-17'],
+        ageCounts['18-25'],
+        ageCounts['Outra']
+      ];
+      ageChart.update();
     }
 
     // Initialize application on load
