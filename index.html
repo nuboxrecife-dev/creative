@@ -32,6 +32,9 @@
   <!-- Supabase JS Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <!-- html2canvas for Ticket Downloading -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="style.css">
   
@@ -803,38 +806,117 @@
   </section>
 
   <!-- Success Modal -->
-  <div id="success-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0B0F19]/90 backdrop-blur-sm hidden">
-    <div class="w-full max-w-md p-8 rounded-3xl bg-[#151B2C] border border-white/10 shadow-2xl text-center relative overflow-hidden">
-      <!-- Glow -->
-      <div class="absolute -right-16 -top-16 w-32 h-32 bg-green-500/20 rounded-full filter blur-xl"></div>
+  <div id="success-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0B0F19]/95 backdrop-blur-md hidden overflow-y-auto">
+    <div class="w-full max-w-sm flex flex-col items-center space-y-6 my-8">
       
-      <div class="relative z-10 space-y-6">
-        <!-- Success Icon -->
-        <div class="mx-auto w-16 h-16 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center text-green-500">
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-        </div>
+      <!-- Top Message -->
+      <div class="text-center space-y-1">
+        <h3 class="text-2xl font-extrabold text-white">Inscrição Confirmada! 🎉</h3>
+        <p class="text-xs text-gray-400">Aqui está o seu ingresso exclusivo para o evento.</p>
+      </div>
+
+      <!-- Ticket Element to download -->
+      <div id="event-ticket" class="w-full relative bg-[#131929] border border-white/10 rounded-3xl shadow-2xl text-left select-none overflow-visible">
         
-        <div>
-          <h3 class="text-2xl font-bold text-white">Inscrição Confirmada!</h3>
-          <p class="text-sm text-gray-400 mt-2">Sua cadeira está reservada para o evento presencial na EPEC.</p>
+        <!-- Glow effects inside the ticket -->
+        <div class="absolute -right-12 -top-12 w-28 h-28 bg-[#0047FF]/15 rounded-full filter blur-xl pointer-events-none"></div>
+        <div class="absolute -left-12 -bottom-12 w-28 h-28 bg-[#8B5CF6]/12 rounded-full filter blur-xl pointer-events-none"></div>
+        
+        <!-- Neon Top bar -->
+        <div class="h-1.5 w-full bg-gradient-to-r from-epecBlue via-techPurple to-epecBlue rounded-t-3xl"></div>
+        
+        <div class="p-6 pb-4 space-y-4 relative z-10">
+          <!-- Logo & Status -->
+          <div class="flex justify-between items-center border-b border-white/5 pb-3">
+            <!-- Logo simulation -->
+            <div class="flex items-center gap-1">
+              <span class="font-extrabold text-sm text-white tracking-tight font-sans">ep<span class="text-epecBlue">ec</span></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-techPurple"></span>
+            </div>
+            <div class="px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/35 text-[9px] font-extrabold text-green-400 uppercase font-mono tracking-wider">
+              Vaga Garantida
+            </div>
+          </div>
+          
+          <!-- Event Header -->
+          <div>
+            <span class="text-[9px] font-bold text-techPurple uppercase tracking-widest font-mono">TREINAMENTO PRESENCIAL</span>
+            <h4 class="text-lg font-black text-white leading-tight mt-0.5 uppercase">O Profissional do Futuro</h4>
+            <p class="text-[10px] text-gray-400 font-semibold mt-0.5">Inteligência Artificial e Aplicações</p>
+          </div>
+          
+          <!-- Ticket Details -->
+          <div class="grid grid-cols-2 gap-y-4 gap-x-2 text-xs border-t border-white/5 pt-4">
+            <div>
+              <span class="block text-[8px] text-gray-500 uppercase font-mono tracking-wider">Participante</span>
+              <span id="summary-name" class="font-bold text-white truncate block text-[11px] mt-0.5">---</span>
+            </div>
+            <div>
+              <span class="block text-[8px] text-gray-500 uppercase font-mono tracking-wider">Cadeira</span>
+              <span id="summary-seat" class="font-black text-[#00f0ff] uppercase tracking-wider block text-sm mt-0.5">---</span>
+            </div>
+            <div>
+              <span class="block text-[8px] text-gray-500 uppercase font-mono tracking-wider">Local</span>
+              <span class="font-bold text-gray-200 block text-[11px] mt-0.5 truncate font-sans">Porto Digital (EPEC)</span>
+            </div>
+            <div>
+              <span class="block text-[8px] text-gray-500 uppercase font-mono tracking-wider">WhatsApp</span>
+              <span id="summary-phone" class="font-bold text-gray-200 block text-[11px] mt-0.5 font-sans">---</span>
+            </div>
+          </div>
         </div>
 
-        <div class="bg-[#0B0F19] rounded-2xl p-4 text-left border border-white/5 space-y-2.5">
-          <div class="flex justify-between text-xs"><span class="text-gray-400">Nome:</span> <span id="summary-name" class="font-semibold text-white">---</span></div>
-          <div class="flex justify-between text-xs"><span class="text-gray-400">WhatsApp:</span> <span id="summary-phone" class="font-semibold text-white">---</span></div>
-          <div class="flex justify-between text-xs"><span class="text-gray-400">Faixa Etária:</span> <span id="summary-age" class="font-semibold text-white">---</span></div>
-          <div class="flex justify-between text-xs"><span class="text-gray-400">Cadeira Reservada:</span> <span id="summary-seat" class="font-bold text-[#00f0ff]">---</span></div>
-          <div class="flex justify-between text-xs border-t border-white/5 pt-2.5"><span class="text-gray-400">Local:</span> <span class="font-semibold text-epecBlue">Recife Antigo (EPEC)</span></div>
+        <!-- Punch card cuts and separator -->
+        <div class="relative h-6 w-full flex items-center justify-between select-none">
+          <!-- Left hole cutout (simulated with absolute overlay) -->
+          <div class="absolute -left-3.5 w-7 h-7 rounded-full bg-[#0B0F19] border border-white/10 z-20"></div>
+          <!-- Dashed Line -->
+          <div class="flex-grow border-t border-dashed border-white/15 mx-5 relative z-10"></div>
+          <!-- Right hole cutout (simulated with absolute overlay) -->
+          <div class="absolute -right-3.5 w-7 h-7 rounded-full bg-[#0B0F19] border border-white/10 z-20"></div>
         </div>
 
-        <p class="text-xs text-gray-500">
-          Enviamos uma mensagem de confirmação para o seu WhatsApp. Guarde este comprovante.
-        </p>
+        <!-- Ticket stub / footer -->
+        <div class="p-6 pt-2 pb-6 flex flex-col items-center justify-center space-y-3 relative z-10">
+          <div class="text-center">
+            <span class="text-[8px] text-gray-500 uppercase font-mono tracking-wider">Código de Entrada</span>
+            <span id="ticket-code" class="block text-[10px] font-mono text-gray-400 tracking-[0.25em] uppercase font-bold mt-0.5">EPEC-TICKET-A1-0000</span>
+          </div>
+          <!-- Barcode simulation -->
+          <div class="w-full h-8 flex items-stretch justify-center gap-[2.5px] opacity-60">
+            <div class="w-1.5 bg-white"></div><div class="w-[1px] bg-white"></div><div class="w-[3px] bg-white"></div>
+            <div class="w-[1px] bg-white"></div><div class="w-2.5 bg-white"></div><div class="w-[2px] bg-white"></div>
+            <div class="w-[4px] bg-white"></div><div class="w-[1px] bg-white"></div><div class="w-1.5 bg-white"></div>
+            <div class="w-[1px] bg-white"></div><div class="w-[3px] bg-white"></div><div class="w-[2px] bg-white"></div>
+            <div class="w-2.5 bg-white"></div><div class="w-[1px] bg-white"></div><div class="w-[4px] bg-white"></div>
+            <div class="w-[2px] bg-white"></div><div class="w-1.5 bg-white"></div><div class="w-[1px] bg-white"></div>
+          </div>
+        </div>
 
-        <button id="close-modal-btn" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 rounded-xl transition duration-150">
-          Fechar
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="w-full space-y-3">
+        <!-- WhatsApp Share Button -->
+        <a id="whatsapp-share-btn" target="_blank" href="#" class="w-full inline-flex items-center justify-center gap-2.5 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold py-3.5 rounded-2xl transition duration-150 shadow-[0_0_20px_rgba(37,211,102,0.2)] text-sm">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.5-5.739-1.451L0 24zm6.59-4.846c1.657.982 3.411 1.499 5.341 1.5 5.518 0 10.011-4.486 10.014-9.997.002-2.67-1.03-5.18-2.903-7.052C17.168 1.733 14.658.7 12.012.7c-5.524 0-10.017 4.486-10.021 9.998-.001 1.93.504 3.813 1.464 5.46L2.457 22l6.19-1.624-.001-.001-.001.001zM17.96 14.86c-.326-.163-1.932-.953-2.226-1.06-.294-.107-.507-.16-.72.162-.213.325-.826 1.06-.1.113.313 1.06-1.06.326.163.633.27.653.275 1.08.13.21-.32.063-.53-.06-.826-.95-2.226-1.826-2.52-2.226-1.054-.36-.454-.53-.454-.53.136-.18.32-.42.48-.63.163-.21.217-.36.327-.54.11-.18.053-.34-.027-.5-.08-.16-.72-1.735-.986-2.38-.26-.625-.526-.54-.72-.55-.187-.01-.4-.01-.613-.01-.213 0-.56.08-.853.4-.293.32-1.12 1.1-1.12 2.678 0 1.578 1.147 3.1 1.307 3.32.16.22 2.257 3.447 5.467 4.836.763.33 1.357.527 1.82.674.767.243 1.467.21 2.02.127.617-.093 1.933-.79 2.2-1.513.267-.723.267-1.343.187-1.473-.08-.13-.293-.21-.62-.37z"/>
+          </svg>
+          <span>Receber Ingresso no WhatsApp</span>
+        </a>
+
+        <!-- Download Button -->
+        <button id="download-ticket-btn" class="w-full inline-flex items-center justify-center gap-2 bg-[#151B2C] hover:bg-[#1C243B] text-white border border-white/10 font-bold py-3.5 rounded-2xl transition duration-150 text-sm font-sans">
+          <svg class="w-4 h-4 text-techPurple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span>Salvar Imagem do Ingresso</span>
+        </button>
+
+        <!-- Close Button -->
+        <button id="close-modal-btn" class="w-full text-xs text-gray-500 hover:text-gray-400 font-semibold py-2 transition duration-150 font-sans">
+          Voltar para o site
         </button>
       </div>
+
     </div>
   </div>
 
@@ -1099,15 +1181,52 @@
           existingLeads.push(lead);
           localStorage.setItem("epec_leads", JSON.stringify(existingLeads));
 
-          let ageLabel = ageVal;
-          if (ageVal === "12-17") ageLabel = "12 a 17 anos";
-          if (ageVal === "18-25") ageLabel = "18 a 25 anos";
-          if (ageVal === "other") ageLabel = "Outra idade";
+          const ticketCode = `EPEC-${seatVal.replace("-", "")}-${Math.floor(1000 + Math.random() * 9000)}`;
+          document.getElementById("ticket-code").textContent = ticketCode;
 
           document.getElementById("summary-name").textContent = nameVal;
           document.getElementById("summary-phone").textContent = phoneVal;
-          document.getElementById("summary-age").textContent = ageLabel;
-          document.getElementById("summary-seat").textContent = `Fila ${seatVal.split("-")[0]} - Cadeira ${seatVal.split("-")[1]}`;
+          document.getElementById("summary-seat").textContent = seatVal;
+
+          // Configura link do WhatsApp
+          const cleanPhone = phoneVal.replace(/\D/g, "");
+          const messageText = `Olá! Acabei de garantir minha vaga no treinamento *O Profissional do Futuro: IA & Aplicações* na EPEC! 🎟️
+
+*INGRESSO OFICIAL*
+👤 Nome: ${nameVal}
+🪑 Cadeira: ${seatVal}
+📍 Local: Porto Digital - Recife Antigo (EPEC)
+📅 Horário: Sábado, às 14:00h
+🔑 Código: ${ticketCode}
+
+Nos vemos lá! 🚀`;
+          
+          const shareBtn = document.getElementById("whatsapp-share-btn");
+          shareBtn.href = `https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${encodeURIComponent(messageText)}`;
+
+          // Configura download da imagem do ingresso
+          const downloadBtn = document.getElementById("download-ticket-btn");
+          const newDownloadBtn = downloadBtn.cloneNode(true);
+          downloadBtn.parentNode.replaceChild(newDownloadBtn, downloadBtn);
+          
+          newDownloadBtn.addEventListener("click", () => {
+            const ticketEl = document.getElementById("event-ticket");
+            const originalShadow = ticketEl.style.boxShadow;
+            ticketEl.style.boxShadow = 'none';
+            
+            html2canvas(ticketEl, {
+              backgroundColor: '#0B0F19',
+              scale: 2,
+              useCORS: true,
+              logging: false
+            }).then(canvas => {
+              ticketEl.style.boxShadow = originalShadow;
+              const link = document.createElement("a");
+              link.download = `ingresso-epec-${nameVal.replace(/\s+/g, '-').toLowerCase()}-${seatVal}.png`;
+              link.href = canvas.toDataURL("image/png");
+              link.click();
+            });
+          });
 
           // Atualiza botão do assento no grid localmente
           const bookedBtn = seatGridEl.querySelector(`[data-seat-id="${seatVal}"]`);
