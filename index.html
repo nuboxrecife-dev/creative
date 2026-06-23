@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>O Profissional do Futuro: IA e Aplicações - EPEC</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Participe do treinamento presencial e gratuito na EPEC. Descubra como criar sites, softwares e faturar alto com Agentes de IA. Apenas 50 vagas!">
+  <meta name="keywords" content="IA, Inteligência Artificial, EPEC, Programação, Freelancer, Porto Digital, Tecnologia, Recife">
+  <meta name="author" content="EPEC - Escola Pernambucana de Economia Criativa">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            epecBlue: '#0047FF',
+            techPurple: '#8B5CF6',
+            darkBg: '#0B0F19',
+            darkCard: '#151B2C',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="relative min-h-screen text-gray-100 bg-[#0B0F19] overflow-x-hidden font-sans">
+
+  <!-- Background Tech Grid Pattern -->
+  <div class="tech-grid"></div>
+
+  <!-- Background Decorative Glowing Lights (Tech Aesthetic) -->
+  <div class="bg-glow-blue top-[10%] -left-[15%] opacity-50"></div>
+  <div class="bg-glow-purple top-[40%] -right-[15%] opacity-50"></div>
+  <div class="bg-glow-blue top-[75%] left-[10%] opacity-40"></div>
+
+  <!-- Hero & Header Background Wrapper -->
+  <div class="relative w-full">
+    <!-- Corner to Corner Tech Image Background with mask -->
+    <div class="hero-full-bg"></div>
+
+    <!-- Top Announcement Bar (CRO Urgency with Real-time Countdown) -->
+    <div class="relative z-50 py-2.5 text-center text-xs font-semibold text-white bg-gradient-to-r from-epecBlue to-techPurple shadow-lg">
+      <div class="container mx-auto px-4 flex items-center justify-center gap-2 flex-wrap">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+        <span>ATENÇÃO: Treinamento 100% presencial e gratuito na EPEC. <span class="underline">Inscrições encerram em:</span></span>
+        <span id="countdown-timer" class="font-mono text-xs bg-black/45 px-2 py-0.5 rounded text-yellow-300 font-bold tracking-wider shadow-inner">00:00:00</span>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="relative z-40 w-full border-b border-white/5 bg-[#0B0F19]/45 backdrop-blur-md">
+      <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <!-- Logo -->
+        <a href="#" class="flex items-center gap-3 group">
+          <svg class="h-8 md:h-10 w-auto text-white fill-current transition-transform duration-300 group-hover:scale-105" viewBox="0 0 160 50" xmlns="http://www.w3.org/2000/svg">
+            <text x="10" y="38" font-family="'Plus Jakarta Sans', sans-serif" font-weight="800" font-size="34" letter-spacing="-1">
+              <tspan fill="#FFFFFF">ep</tspan><tspan fill="#0047FF">ec</tspan>
+            </text>
+            <circle cx="102" cy="18" r="4.5" fill="#8B5CF6" />
+            <line x1="102" y1="18" x2="115" y2="28" stroke="#0047FF" stroke-width="2.5" />
+            <circle cx="115" cy="28" r="3.5" fill="#0047FF" />
+          </svg>
+          <span class="hidden sm:inline-block text-[11px] font-semibold tracking-widest text-gray-400 uppercase border-l border-white/10 pl-3 leading-tight">
+            Escola Pernambucana<br>de Economia Criativa
+          </span>
+        </a>
+        
+        <!-- Counter Badge -->
+        <div class="flex items-center gap-2 bg-[#151B2C]/80 border border-white/10 px-4 py-2 rounded-full backdrop-blur-md">
+          <span class="text-xs text-gray-400 font-medium">Vagas Restantes:</span>
+          <span id="vagas-contador" class="text-sm font-bold text-red-500 animate-pulse">8</span>
+          <span class="text-xs text-gray-500">/ 50</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative z-30 max-w-7xl mx-auto px-6 pt-16 pb-24 md:pt-24 md:pb-32 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      
+      <!-- Hero Copy -->
+      <div class="lg:col-span-7 flex flex-col justify-center text-left">
+        <!-- Verificado Badge -->
+        <div class="reveal-item inline-flex items-center gap-2 bg-[#0047FF]/15 border border-[#0047FF]/35 px-4 py-1.5 rounded-full w-fit mb-6 shadow-[0_0_15px_rgba(0,71,255,0.15)]">
+          <svg class="w-4 h-4 text-epecBlue animate-pulse" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+          </svg>
+          <span class="text-xs font-bold tracking-wider text-epecBlue uppercase">Treinamento Presencial Gratuito</span>
+        </div>
+
+        <h1 class="reveal-item text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-white mb-6">
+          O mercado mudou. <br class="hidden sm:inline">
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-epecBlue to-techPurple">Aprenda a usar IA</span> <br>
+          e acelere sua carreira.
+        </h1>
+
+        <p class="reveal-item text-base sm:text-lg md:text-xl text-gray-300 font-normal leading-relaxed mb-10 max-w-2xl">
+          Participe de um treinamento presencial e <strong class="text-white font-semibold">100% gratuito na EPEC</strong>. Descubra como os Agentes de IA estão transformando jovens em desenvolvedores independentes e empresários altamente lucrativos de forma extremamente acelerada.
+        </p>
+
+        <!-- Key Details Bullet Points -->
+        <div class="reveal-item grid grid-cols-1 sm:grid-cols-2 gap-5 mb-10 border-l-2 border-epecBlue/40 pl-4 py-1">
+          <div class="flex items-center gap-3">
+            <div class="p-1.5 bg-[#151B2C]/75 border border-white/10 rounded-lg">
+              <svg class="w-5 h-5 text-techPurple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </div>
+            <span class="text-sm font-semibold text-gray-200">Presencial na EPEC</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="p-1.5 bg-[#151B2C]/75 border border-white/10 rounded-lg">
+              <svg class="w-5 h-5 text-techPurple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <span class="text-sm font-semibold text-gray-200">3 Horas de Imersão Prática</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="p-1.5 bg-[#151B2C]/75 border border-white/10 rounded-lg">
+              <svg class="w-5 h-5 text-techPurple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            </div>
+            <span class="text-sm font-semibold text-gray-200">Recife Antigo (Porto Digital)</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="p-1.5 bg-[#151B2C]/75 border border-white/10 rounded-lg">
+              <svg class="w-5 h-5 text-techPurple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <span class="text-sm font-semibold text-gray-200">Vagas Limitadas (Apenas 50)</span>
+          </div>
+        </div>
+
+        <!-- Hero CTA Button -->
+        <div class="reveal-item">
+          <a href="#inscricao" class="btn-pulse inline-flex items-center justify-center gap-3 bg-epecBlue hover:bg-[#003be0] text-white font-bold text-base sm:text-lg py-4 px-8 rounded-xl transition duration-350 ease-in-out w-full sm:w-fit text-center shadow-[0_0_20px_rgba(0,71,255,0.3)]">
+            <span>Garantir Minha Vaga Gratuita</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+          </a>
+          <p class="text-xs text-gray-500 mt-3 pl-2">* Evento de alto impacto. Não exige conhecimento prévio de código.</p>
+        </div>
+      </div>
+
+      <!-- Hero Visual (Futuristic Image + Floating Code Overlay) -->
+      <div class="lg:col-span-5 flex justify-center items-center relative z-10">
+        <div class="relative w-full max-w-sm sm:max-w-md animate-float pb-14 lg:pb-0">
+          
+          <!-- Image Frame -->
+          <div class="relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_20px_50px_rgba(0,71,255,0.15)] aspect-[4/3] sm:aspect-square">
+            <img src="young_coders.png" alt="Jovem Programando no Futuro" class="w-full h-full object-cover">
+            <!-- Dark Gradient overlay inside image for better transition -->
+            <div class="absolute inset-0 bg-gradient-to-t from-darkBg via-transparent to-transparent opacity-90"></div>
+          </div>
+          
+          <!-- Floating glass card overlapping the image -->
+          <div class="absolute -bottom-2 -left-3 sm:-left-6 right-3 sm:right-auto sm:w-[320px] p-5 rounded-2xl glass-panel border border-white/15 shadow-2xl backdrop-blur-lg">
+            <div class="flex items-center gap-3 border-b border-white/5 pb-3 mb-3">
+              <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-epecBlue to-techPurple flex items-center justify-center text-white font-bold text-xs shadow-[0_0_10px_rgba(0,71,255,0.4)]">
+                AI
+              </div>
+              <div>
+                <h4 class="font-semibold text-xs text-white">Treinamento na EPEC</h4>
+                <p class="text-[10px] text-gray-400">Porto Digital - Recife</p>
+              </div>
+            </div>
+            <!-- Code simulation -->
+            <div class="bg-[#0B0F19]/80 rounded-xl p-3 font-mono text-[10px] text-green-400 border border-white/5 shadow-inner">
+              <span class="text-purple-400">const</span> dev = <span class="text-blue-400">new</span> <span class="text-yellow-400">Developer</span>();<br>
+              <span class="text-purple-400">await</span> dev.<span class="text-blue-300">accelerateWithAI</span>();
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- AI Simulator Section (New Interactive Feature) -->
+  <section id="simulador-ia" class="relative z-30 py-24 bg-gradient-to-b from-[#0B0F19] to-[#0B0F19] border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-6">
+      
+      <!-- Section Title -->
+      <div class="text-center max-w-3xl mx-auto mb-16 reveal-item">
+        <div class="inline-flex items-center gap-2 bg-[#0047FF]/15 border border-[#0047FF]/35 px-4 py-1.5 rounded-full w-fit mb-4 shadow-[0_0_15px_rgba(0,71,255,0.1)]">
+          <span class="text-xs font-bold tracking-wider text-epecBlue uppercase">Veja a IA em Ação</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-white mb-4">
+          Crie um Projeto com IA <span class="text-transparent bg-clip-text bg-gradient-to-r from-epecBlue to-techPurple">em Poucos Segundos</span>
+        </h2>
+        <p class="text-gray-400 text-sm sm:text-base max-w-xl mx-auto">
+          Escolha uma sugestão ou escreva seu próprio prompt. Assista ao Agente de IA construir o código no terminal e renderizar a prévia visual instantaneamente.
+        </p>
+      </div>
+
+      <!-- Simulator Area -->
+      <div class="reveal-item max-w-6xl mx-auto">
+        <!-- Input & Suggestion Buttons -->
+        <div class="mb-8 max-w-3xl mx-auto flex flex-col items-center gap-4">
+          <!-- Suggestion pills -->
+          <div class="flex flex-wrap justify-center gap-2.5">
+            <button onclick="runSimulation('delivery')" class="text-xs bg-[#151B2C]/80 hover:bg-[#1A233A] border border-white/10 px-4 py-2.5 rounded-full transition duration-150 text-gray-300 font-semibold hover:border-epecBlue hover:text-white">🍔 App de Delivery</button>
+            <button onclick="runSimulation('petshop')" class="text-xs bg-[#151B2C]/80 hover:bg-[#1A233A] border border-white/10 px-4 py-2.5 rounded-full transition duration-150 text-gray-300 font-semibold hover:border-epecBlue hover:text-white">🐾 Site de Petshop</button>
+            <button onclick="runSimulation('email')" class="text-xs bg-[#151B2C]/80 hover:bg-[#1A233A] border border-white/10 px-4 py-2.5 rounded-full transition duration-150 text-gray-300 font-semibold hover:border-epecBlue hover:text-white">📧 Automação de Email</button>
+          </div>
+          <!-- Custom Input -->
+          <div class="w-full flex items-center gap-3 bg-[#151B2C]/65 border border-white/10 p-2 rounded-2xl focus-within:border-epecBlue focus-within:ring-2 focus-within:ring-epecBlue/20 transition duration-150">
+            <input type="text" id="sim-prompt" placeholder="Digite uma ideia (ex: Landing page de venda de café com depoimentos)..." class="w-full bg-transparent border-none text-sm text-white px-3 py-2.5 focus:outline-none placeholder-gray-500">
+            <button onclick="runCustomSimulation()" id="sim-btn" class="bg-gradient-to-r from-epecBlue to-techPurple hover:brightness-110 text-white font-bold text-xs px-6 py-3.5 rounded-xl transition duration-150 shadow-md flex-shrink-0 flex items-center gap-2">
+              <span>Gerar com IA</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Simulator Interface (Split Terminal & Browser Screen) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+          
+          <!-- Lado Esquerdo: Terminal Shell -->
+          <div class="lg:col-span-5 flex flex-col bg-[#070A10] rounded-2xl border border-white/10 overflow-hidden shadow-2xl h-[420px]">
+            <!-- Terminal Header -->
+            <div class="flex items-center justify-between px-4 py-3 bg-[#0C0F18] border-b border-white/5 flex-shrink-0">
+              <div class="flex items-center gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-red-500/80"></span>
+                <span class="w-3 h-3 rounded-full bg-yellow-500/80"></span>
+                <span class="w-3 h-3 rounded-full bg-green-500/80"></span>
+              </div>
+              <span class="text-[10px] font-mono text-gray-500 tracking-wider font-semibold">AGENT_TERMINAL.sh</span>
+              <span class="w-6"></span>
+            </div>
+            <!-- Shell Body -->
+            <div id="terminal-body" class="p-5 font-mono text-[11px] text-green-400 overflow-y-auto flex-grow terminal-scroll leading-relaxed">
+              <div class="text-gray-500 mb-2"># Antigravity AI Code Runner v3.5</div>
+              <div class="text-gray-400">$ ready to receive prompt...<span class="terminal-cursor"></span></div>
+            </div>
+          </div>
+
+          <!-- Lado Direito: Browser Preview Mockup -->
+          <div class="lg:col-span-7 flex flex-col bg-[#151B2C]/40 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden shadow-2xl h-[420px]">
+            <!-- Browser Header -->
+            <div class="flex items-center gap-3 px-4 py-3 bg-[#0C101B]/80 border-b border-white/10 flex-shrink-0">
+              <!-- Window control dots -->
+              <div class="flex gap-1.5 flex-shrink-0">
+                <span class="w-2.5 h-2.5 rounded-full bg-white/10"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-white/10"></span>
+              </div>
+              <!-- URL bar -->
+              <div class="w-full bg-[#0B0F19]/90 border border-white/5 px-4 py-1 rounded-lg flex items-center justify-between text-[10px] text-gray-400">
+                <span class="flex items-center gap-1.5 overflow-hidden text-ellipsis whitespace-nowrap">
+                  <svg class="w-3 h-3 text-green-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path></svg>
+                  <span id="preview-url">localhost:3000/</span>
+                </span>
+                <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.706 8.9H19.5"></path></svg>
+              </div>
+            </div>
+            
+            <!-- Browser Body -->
+            <div id="preview-container" class="flex-grow bg-[#0B0F19] overflow-y-auto p-6 flex flex-col justify-center items-center relative transition-all duration-500">
+              
+              <!-- Blank State -->
+              <div id="preview-blank" class="text-center space-y-4 max-w-xs">
+                <div class="w-16 h-16 rounded-full bg-[#151B2C] border border-white/5 mx-auto flex items-center justify-center text-gray-500">
+                  <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                </div>
+                <div>
+                  <h4 class="text-sm font-bold text-white">Nenhum projeto construído ainda</h4>
+                  <p class="text-xs text-gray-500 mt-1.5 leading-relaxed">Digite seu prompt acima ou escolha uma sugestão para ver a simulação.</p>
+                </div>
+              </div>
+              
+              <!-- Loader State -->
+              <div id="preview-loader" class="hidden text-center space-y-5">
+                <div class="relative w-16 h-16 mx-auto">
+                  <div class="absolute inset-0 rounded-full border-4 border-white/5"></div>
+                  <div class="absolute inset-0 rounded-full border-4 border-t-epecBlue animate-spin"></div>
+                </div>
+                <div>
+                  <h4 id="loader-title" class="text-sm font-bold text-white">Inicializando Agente...</h4>
+                  <p class="text-[11px] text-gray-500 mt-1 animate-pulse">Buscando inteligência artificial...</p>
+                </div>
+              </div>
+              
+              <!-- Result Content container -->
+              <div id="preview-result" class="hidden w-full h-full flex flex-col justify-between opacity-0 transition-opacity duration-500">
+                <!-- Dynamically rendered UI -->
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="relative z-30 py-24 bg-gradient-to-b from-[#0B0F19] via-[#0E1323] to-[#0B0F19] border-t border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-6">
+      
+      <!-- Section Title -->
+      <div class="text-center max-w-3xl mx-auto mb-16 reveal-item">
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white mb-4">
+          O que você vai descobrir neste <span class="text-transparent bg-clip-text bg-gradient-to-r from-epecBlue to-techPurple">Treinamento Exclusivo</span>?
+        </h2>
+        <p class="text-gray-400 text-base sm:text-lg">
+          O mercado de desenvolvimento tradicional mudou. Revelaremos o passo a passo exato para você construir valor imediato utilizando inteligência artificial.
+        </p>
+      </div>
+
+      <!-- 3 Cards Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <!-- Card 1 -->
+        <div class="reveal-item neon-border p-8 flex flex-col h-full">
+          <div class="w-12 h-12 rounded-xl bg-epecBlue/15 border border-epecBlue/30 flex items-center justify-center mb-6 shadow-[inset_0_1px_1px_rgba(0,71,255,0.2)]">
+            <svg class="w-6 h-6 text-epecBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-4">O Efeito Uau</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-6">
+            Veja na prática como construir aplicações completas, sites modernos e softwares integrados em minutos, utilizando o poder dos novos Agentes de IA. Sem precisar de anos de estudo de programação.
+          </p>
+          <span class="mt-auto text-xs font-semibold text-epecBlue tracking-wider uppercase flex items-center gap-1.5">
+            Módulo Prático 
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+          </span>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="reveal-item neon-border p-8 flex flex-col h-full">
+          <div class="w-12 h-12 rounded-xl bg-techPurple/15 border border-techPurple/30 flex items-center justify-center mb-6 shadow-[inset_0_1px_1px_rgba(139,92,246,0.2)]">
+            <svg class="w-6 h-6 text-techPurple" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-4">A Matemática dos R$ 12k</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-6">
+            Desmistificamos a jornada financeira. Entenda o modelo exato de negócios freelancer e de agência que permite a jovens faturar alto de qualquer lugar, prestando serviços de altíssimo valor com IA.
+          </p>
+          <span class="mt-auto text-xs font-semibold text-techPurple tracking-wider uppercase flex items-center gap-1.5">
+            Módulo Financeiro 
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+          </span>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="reveal-item neon-border p-8 flex flex-col h-full">
+          <div class="w-12 h-12 rounded-xl bg-epecBlue/15 border border-epecBlue/30 flex items-center justify-center mb-6 shadow-[inset_0_1px_1px_rgba(0,71,255,0.2)]">
+            <svg class="w-6 h-6 text-epecBlue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A2 2 0 013 15.485V6.472m8.055 12.827L21 14V5l-9 4-9-4v9.515a2 2 0 001.055 1.777L11.055 19.3z"></path></svg>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-4">O Mapa do Mercado</h3>
+          <p class="text-gray-400 text-sm leading-relaxed mb-6">
+            Descubra onde estão os clientes e empresas prontos para pagar caro por automações, sites inteligentes e sistemas rápidos de IA. Te daremos o atalho de prospecção e as chaves de fechamento de contratos.
+          </p>
+          <span class="mt-auto text-xs font-semibold text-epecBlue tracking-wider uppercase flex items-center gap-1.5">
+            Módulo Comercial 
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+          </span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Timeline/Schedule Section -->
+  <section class="relative z-30 py-24 bg-gradient-to-b from-[#0B0F19] to-[#090D17] border-b border-white/5">
+    <div class="max-w-5xl mx-auto px-6">
+      
+      <!-- Section Title -->
+      <div class="text-center max-w-3xl mx-auto mb-20 reveal-item">
+        <div class="inline-flex items-center gap-2 bg-[#0047FF]/15 border border-[#0047FF]/35 px-4 py-1.5 rounded-full w-fit mb-4">
+          <span class="text-xs font-bold tracking-wider text-epecBlue uppercase">Como vai funcionar</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
+          Cronograma de <span class="text-transparent bg-clip-text bg-gradient-to-r from-epecBlue to-techPurple">3 Horas de Imersão</span>
+        </h2>
+        <p class="text-gray-400 text-sm sm:text-base mt-4 max-w-xl mx-auto">
+          Uma programação prática e direta ao ponto, desenhada para extrair o máximo de conhecimento prático.
+        </p>
+      </div>
+
+      <!-- Timeline Core -->
+      <div class="relative border-l-2 timeline-connector ml-4 md:ml-36 space-y-12 py-4">
+        
+        <!-- Step 1 -->
+        <div class="relative pl-8 md:pl-16 reveal-item">
+          <!-- Dot -->
+          <span class="absolute -left-[9px] top-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-darkBg border-2 border-epecBlue timeline-dot-active"></span>
+          <!-- Time badge -->
+          <div class="md:absolute md:-left-36 md:top-1.5 md:w-28 md:text-right font-extrabold text-epecBlue text-sm tracking-wider mb-2 md:mb-0 uppercase">
+            00h - 01h
+          </div>
+          <!-- Card -->
+          <div class="glass-panel p-6 rounded-2xl border border-white/10 shadow-xl transition-all duration-300 hover:border-epecBlue/30 hover:shadow-[0_10px_30px_rgba(0,71,255,0.08)]">
+            <h3 class="text-lg font-bold text-white mb-2">Módulo 1: O Efeito Uau & Primeiros Passos com IA</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+              Demonstração prática de criação de sites, softwares e automações em minutos com Agentes de IA. Você entenderá o potencial das novas ferramentas e verá o código ganhar vida sem precisar programar de forma tradicional.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="relative pl-8 md:pl-16 reveal-item">
+          <!-- Dot -->
+          <span class="absolute -left-[9px] top-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-darkBg border-2 border-techPurple timeline-dot-active"></span>
+          <!-- Time badge -->
+          <div class="md:absolute md:-left-36 md:top-1.5 md:w-28 md:text-right font-extrabold text-techPurple text-sm tracking-wider mb-2 md:mb-0 uppercase">
+            01h - 02h
+          </div>
+          <!-- Card -->
+          <div class="glass-panel p-6 rounded-2xl border border-white/10 shadow-xl transition-all duration-300 hover:border-techPurple/30 hover:shadow-[0_10px_30px_rgba(139,92,246,0.08)]">
+            <h3 class="text-lg font-bold text-white mb-2">Módulo 2: A Matemática dos R$ 12k</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+              Como precificar seus serviços de IA. Vamos abrir a planilha financeira e mostrar como um desenvolvedor independente pode faturar R$ 12 mil por mês fechando apenas de 3 a 4 projetos simples.
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="relative pl-8 md:pl-16 reveal-item">
+          <!-- Dot -->
+          <span class="absolute -left-[9px] top-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-darkBg border-2 border-epecBlue timeline-dot-active"></span>
+          <!-- Time badge -->
+          <div class="md:absolute md:-left-36 md:top-1.5 md:w-28 md:text-right font-extrabold text-epecBlue text-sm tracking-wider mb-2 md:mb-0 uppercase">
+            02h - 03h
+          </div>
+          <!-- Card -->
+          <div class="glass-panel p-6 rounded-2xl border border-white/10 shadow-xl transition-all duration-300 hover:border-epecBlue/30 hover:shadow-[0_10px_30px_rgba(0,71,255,0.08)]">
+            <h3 class="text-lg font-bold text-white mb-2">Módulo 3: Prospecção de Clientes & Networking</h3>
+            <p class="text-gray-400 text-sm leading-relaxed">
+              Onde encontrar empresas e clientes dispostos a pagar por soluções rápidas de inteligência artificial. Scripts de abordagem validados e técnicas de fechamento para fechar contratos sem atrito.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Authority Section -->
+  <section class="relative z-30 py-24 max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      
+      <!-- Text Side -->
+      <div>
+        <div class="reveal-item inline-flex items-center gap-2 bg-techPurple/15 border border-techPurple/35 px-4 py-1.5 rounded-full w-fit mb-6">
+          <span class="text-xs font-bold tracking-wider text-techPurple uppercase">Sobre o Local de Inovação</span>
+        </div>
+        
+        <h2 class="reveal-item text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-6">
+          A epec e o ecossistema tecnológico do Porto Digital
+        </h2>
+        
+        <p class="reveal-item text-gray-300 text-sm sm:text-base leading-relaxed mb-6">
+          A <strong>epec (Escola Pernambucana de Economia Criativa)</strong> é uma escola focada na formação prática de profissionais criativos e jovens empreendedores do futuro. Desenvolvemos o potencial dos nossos alunos aproveitando a energia cultural, histórica e tecnológica do nosso estado.
+        </p>
+        <p class="reveal-item text-gray-300 text-sm sm:text-base leading-relaxed mb-8">
+          Embarcada no coração do <strong class="text-white">Porto Digital de Recife</strong> - um dos maiores parques tecnológicos e urbanos abertos do Brasil - a epec funciona como uma ponte direta entre a inovação, o conhecimento prático e o mercado de alta tecnologia.
+        </p>
+
+        <!-- Dynamic Micro Stats Grid -->
+        <div class="reveal-item grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
+          <div>
+            <div class="text-xl sm:text-2xl font-bold text-white">100%</div>
+            <div class="text-xs text-gray-500 font-medium">Presencial e Prático</div>
+          </div>
+          <div>
+            <div class="text-xl sm:text-2xl font-bold text-white">Recife</div>
+            <div class="text-xs text-gray-500 font-medium">Porto Digital</div>
+          </div>
+          <div>
+            <div class="text-xl sm:text-2xl font-bold text-white">Infra</div>
+            <div class="text-xs text-gray-500 font-medium">De Alta Tecnologia</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Visual Side -->
+      <div class="flex justify-center items-center">
+        <!-- Floating Glassmorphism Cards Container -->
+        <div class="reveal-item relative w-full max-w-md p-8 rounded-2xl bg-gradient-to-tr from-[#151B2C]/90 to-[#0F1424]/90 border border-white/10 shadow-xl overflow-hidden flex flex-col justify-center backdrop-blur-md">
+          <div class="absolute -right-16 -top-16 w-32 h-32 bg-epecBlue/20 rounded-full filter blur-xl pointer-events-none"></div>
+          <div class="absolute -left-16 -bottom-16 w-32 h-32 bg-techPurple/20 rounded-full filter blur-xl pointer-events-none"></div>
+          
+          <div class="relative z-10 space-y-6 text-center py-6">
+            <!-- Verified Badge -->
+            <div class="mx-auto w-16 h-16 rounded-full bg-[#0047FF]/10 flex items-center justify-center border border-[#0047FF]/35">
+              <svg class="w-8 h-8 text-epecBlue animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path></svg>
+            </div>
+            
+            <div>
+              <h4 class="text-lg font-bold text-white">Por que a epec?</h4>
+              <p class="text-xs text-gray-400 mt-1 font-medium">Conectando jovens ao futuro da tecnologia</p>
+            </div>
+            
+            <p class="text-gray-300 text-sm max-w-xs mx-auto italic leading-relaxed">
+              "Aqui você não fica na teoria. Você senta no computador, entende o ecossistema digital e cria projetos de verdade desde o primeiro dia."
+            </p>
+            
+            <div class="inline-block text-[11px] font-bold text-gray-400 tracking-widest uppercase border-t border-white/5 pt-4 w-full text-center">
+              📍 Bairro do Recife, Pernambuco
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- Captura Form Section -->
+  <section id="inscricao" class="relative z-30 py-24 bg-gradient-to-t from-[#090D17] to-[#0B0F19] border-t border-white/5">
+    <div class="max-w-xl mx-auto px-6">
+      
+      <!-- Form Card Container with Futuristic Neon / Glass Design -->
+      <div class="reveal-item glass-panel relative p-8 md:p-10 rounded-3xl overflow-hidden border border-white/12 shadow-[0_25px_60px_rgba(0,0,0,0.6)]">
+        
+        <!-- Subtle Glow in background -->
+        <div class="absolute -right-20 -bottom-20 w-52 h-52 bg-epecBlue/15 rounded-full filter blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -top-20 w-52 h-52 bg-techPurple/15 rounded-full filter blur-3xl pointer-events-none"></div>
+
+        <div class="relative z-10 text-center mb-8">
+          <div class="inline-flex items-center gap-2 text-red-400 bg-red-500/10 border border-red-500/20 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider mb-4">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-500 animate-ping"></span>
+            POUCAS VAGAS DISPONÍVEIS
+          </div>
+          <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">
+            Garanta Sua <span class="text-transparent bg-clip-text bg-gradient-to-r from-epecBlue to-techPurple">Cadeira Gratuita</span>
+          </h2>
+          <p class="text-gray-400 text-xs sm:text-sm">
+            Selecione seu assento no mapa de cadeiras abaixo e conclua seu cadastro de forma imediata.
+          </p>
+        </div>
+
+        <!-- Form Element -->
+        <form id="lead-form" class="relative z-10 space-y-6">
+          
+          <!-- Seat Map Interactive Grid -->
+          <div class="flex flex-col border-b border-white/10 pb-6 mb-2">
+            <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-3 pl-1">
+              <span class="text-epecBlue font-mono mr-1.5">[!]</span> Escolha sua Cadeira no Auditório
+            </label>
+            
+            <!-- Stage simulation graphic -->
+            <div class="w-full text-center text-[8px] font-mono text-gray-500 border-b border-white/5 pb-2 mb-4 tracking-[0.2em] uppercase select-none">
+              [ PALCO / TELA DE PROJEÇÃO ]
+            </div>
+
+            <!-- Seat grid (50 dots) -->
+            <div id="seat-grid" class="relative z-20 pointer-events-auto grid grid-cols-10 gap-2 max-w-[340px] mx-auto w-full px-1">
+              <!-- Injected dynamically via JavaScript -->
+            </div>
+
+            <!-- Display Selection -->
+            <div class="flex items-center justify-between mt-5 px-1.5 text-xs">
+              <span class="text-gray-400 font-medium">Cadeira Selecionada:</span>
+              <span id="selected-seat-badge" class="text-transparent bg-clip-text bg-gradient-to-r from-epecBlue to-[#00f0ff] font-extrabold uppercase tracking-widest text-sm">Nenhuma</span>
+              <input type="hidden" id="selected-seat" name="selected-seat" required>
+            </div>
+
+            <!-- Legend -->
+            <div class="flex items-center justify-center gap-4 mt-4 text-[9px] text-gray-500 font-mono">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-white/5 border border-white/5"></span> Ocupado</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-epecBlue/20 border border-epecBlue/40 animate-pulse"></span> Disponível</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#00f0ff] border-[#00f0ff] shadow-[0_0_5px_#00f0ff]"></span> Escolhido</span>
+            </div>
+          </div>
+          <!-- Full Name -->
+          <div class="group flex flex-col">
+            <label for="name" class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2 pl-1 group-focus-within:text-epecBlue transition-colors duration-300">
+              <span class="text-epecBlue font-mono mr-1">[01]</span> Nome Completo
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 group-focus-within:text-epecBlue transition-colors duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+              </div>
+              <input type="text" id="name" required placeholder="Digite seu nome completo" class="w-full bg-[#0B0F19]/60 border border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-epecBlue focus:ring-2 focus:ring-epecBlue/20 transition duration-300 shadow-inner">
+            </div>
+          </div>
+
+          <!-- WhatsApp -->
+          <div class="group flex flex-col">
+            <label for="whatsapp" class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2 pl-1 group-focus-within:text-epecBlue transition-colors duration-300">
+              <span class="text-epecBlue font-mono mr-1">[02]</span> WhatsApp com DDD
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 group-focus-within:text-epecBlue transition-colors duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.725l.548 2.2a1 1 0 01-.321.988l-1.305.98a10.582 10.582 0 004.872 4.872l.98-1.305a1 1 0 01.988-.321l2.2.548a1 1 0 01.725.94V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+              </div>
+              <input type="tel" id="whatsapp" required placeholder="(81) 99999-9999" class="w-full bg-[#0B0F19]/60 border border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-epecBlue focus:ring-2 focus:ring-epecBlue/20 transition duration-300 shadow-inner">
+            </div>
+          </div>
+
+          <!-- Age Group -->
+          <div class="group flex flex-col">
+            <label for="age-group" class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2 pl-1 group-focus-within:text-epecBlue transition-colors duration-300">
+              <span class="text-epecBlue font-mono mr-1">[03]</span> Faixa Etária
+            </label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 group-focus-within:text-epecBlue transition-colors duration-300">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+              </div>
+              <select id="age-group" required class="w-full appearance-none bg-[#0B0F19]/60 border border-white/10 rounded-xl pl-11 pr-10 py-3.5 text-sm text-white focus:outline-none focus:border-epecBlue focus:ring-2 focus:ring-epecBlue/20 transition duration-300 shadow-inner">
+                <option value="" disabled selected class="bg-[#151B2C]">Selecione sua faixa etária</option>
+                <option value="12-17" class="bg-[#151B2C]">12 a 17 anos (Menor de Idade)</option>
+                <option value="18-25" class="bg-[#151B2C]">18 a 25 anos (Jovem Adulto)</option>
+                <option value="other" class="bg-[#151B2C]">Outra idade</option>
+              </select>
+              <!-- Custom select arrow -->
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Privacy compliance -->
+          <p class="text-[10px] text-gray-500 leading-normal px-1">
+            Ao se inscrever, você concorda com nossa Política de Privacidade. Utilizaremos seu WhatsApp exclusivamente para enviar os detalhes da confirmação e alertas sobre o evento.
+          </p>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-pulse w-full bg-gradient-to-r from-epecBlue to-techPurple hover:brightness-110 text-white font-bold text-sm sm:text-base py-4 rounded-xl transition duration-150 ease-in-out flex items-center justify-center gap-2.5 shadow-[0_0_15px_rgba(0,71,255,0.25)]">
+            <span>Quero Minha Vaga no Treinamento</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"></path></svg>
+          </button>
+        </form>
+
+        <!-- Futuristic Tech Badge Footer -->
+        <div class="flex items-center justify-between border-t border-white/5 pt-4 mt-6 text-[10px] text-gray-500 font-mono">
+          <span class="flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+            CONEXÃO SEGURA SSL
+          </span>
+          <span>STATUS: ONLINE</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Accordion Section -->
+  <section class="relative z-30 py-24 bg-gradient-to-b from-[#090D17] to-[#0B0F19] border-t border-white/5">
+    <div class="max-w-4xl mx-auto px-6">
+      
+      <!-- Section Title -->
+      <div class="text-center max-w-3xl mx-auto mb-16 reveal-item">
+        <div class="inline-flex items-center gap-2 bg-[#8B5CF6]/15 border border-[#8B5CF6]/35 px-4 py-1.5 rounded-full w-fit mb-4">
+          <span class="text-xs font-bold tracking-wider text-techPurple uppercase">Tire suas dúvidas</span>
+        </div>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-white">
+          Perguntas <span class="text-transparent bg-clip-text bg-gradient-to-r from-epecBlue to-techPurple">Frequentes</span>
+        </h2>
+      </div>
+
+      <!-- FAQ List -->
+      <div class="space-y-4 max-w-3xl mx-auto reveal-item">
+        <!-- FAQ 1 -->
+        <div class="faq-item rounded-2xl bg-[#151B2C]/50 overflow-hidden">
+          <div class="faq-trigger flex items-center justify-between p-6 gap-4">
+            <h3 class="text-sm sm:text-base font-bold text-white">Preciso ter conhecimento prévio em programação para participar?</h3>
+            <svg class="faq-icon w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+          <div class="faq-content">
+            <div class="p-6 pt-0 border-t border-white/5 text-xs sm:text-sm text-gray-300 leading-relaxed">
+              Não! O treinamento foi estruturado para iniciantes do zero. Mostraremos como usar Agentes de IA que escrevem códigos e constroem sistemas para você de forma rápida. O foco é entender o fluxo de trabalho auxiliado por IA, não a programação lógica tradicional profunda.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 2 -->
+        <div class="faq-item rounded-2xl bg-[#151B2C]/50 overflow-hidden">
+          <div class="faq-trigger flex items-center justify-between p-6 gap-4">
+            <h3 class="text-sm sm:text-base font-bold text-white">O treinamento é realmente 100% gratuito? Há alguma taxa secreta?</h3>
+            <svg class="faq-icon w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+          <div class="faq-content">
+            <div class="p-6 pt-0 border-t border-white/5 text-xs sm:text-sm text-gray-300 leading-relaxed">
+              Sim, o treinamento é completamente gratuito do início ao fim. Trata-se de uma iniciativa de impacto social e formação promovida na sede da EPEC no Porto Digital para impulsionar a qualificação em economia criativa e novas tecnologias em Recife.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item rounded-2xl bg-[#151B2C]/50 overflow-hidden">
+          <div class="faq-trigger flex items-center justify-between p-6 gap-4">
+            <h3 class="text-sm sm:text-base font-bold text-white">Onde exatamente vai acontecer o treinamento presencial?</h3>
+            <svg class="faq-icon w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+          <div class="faq-content">
+            <div class="p-6 pt-0 border-t border-white/5 text-xs sm:text-sm text-gray-300 leading-relaxed">
+              O evento acontecerá presencialmente na sede física da EPEC, situada no Bairro do Recife (Recife Antigo), coração do Porto Digital. Você receberá o mapa e o endereço detalhado diretamente no seu WhatsApp logo após preencher e enviar o formulário.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item rounded-2xl bg-[#151B2C]/50 overflow-hidden">
+          <div class="faq-trigger flex items-center justify-between p-6 gap-4">
+            <h3 class="text-sm sm:text-base font-bold text-white">Será emitido algum certificado de participação?</h3>
+            <svg class="faq-icon w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path></svg>
+          </div>
+          <div class="faq-content">
+            <div class="p-6 pt-0 border-t border-white/5 text-xs sm:text-sm text-gray-300 leading-relaxed">
+              Sim! Todos os participantes que comparecerem e concluírem a imersão de 3 horas receberão um certificado digital de conclusão oficial emitido pela EPEC, ideal para incluir no LinkedIn ou currículo.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#0B0F19]/90 backdrop-blur-sm hidden">
+    <div class="w-full max-w-md p-8 rounded-3xl bg-[#151B2C] border border-white/10 shadow-2xl text-center relative overflow-hidden">
+      <!-- Glow -->
+      <div class="absolute -right-16 -top-16 w-32 h-32 bg-green-500/20 rounded-full filter blur-xl"></div>
+      
+      <div class="relative z-10 space-y-6">
+        <!-- Success Icon -->
+        <div class="mx-auto w-16 h-16 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center text-green-500">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+        </div>
+        
+        <div>
+          <h3 class="text-2xl font-bold text-white">Inscrição Confirmada!</h3>
+          <p class="text-sm text-gray-400 mt-2">Sua cadeira está reservada para o evento presencial na EPEC.</p>
+        </div>
+
+        <div class="bg-[#0B0F19] rounded-2xl p-4 text-left border border-white/5 space-y-2.5">
+          <div class="flex justify-between text-xs"><span class="text-gray-400">Nome:</span> <span id="summary-name" class="font-semibold text-white">---</span></div>
+          <div class="flex justify-between text-xs"><span class="text-gray-400">WhatsApp:</span> <span id="summary-phone" class="font-semibold text-white">---</span></div>
+          <div class="flex justify-between text-xs"><span class="text-gray-400">Faixa Etária:</span> <span id="summary-age" class="font-semibold text-white">---</span></div>
+          <div class="flex justify-between text-xs"><span class="text-gray-400">Cadeira Reservada:</span> <span id="summary-seat" class="font-bold text-[#00f0ff]">---</span></div>
+          <div class="flex justify-between text-xs border-t border-white/5 pt-2.5"><span class="text-gray-400">Local:</span> <span class="font-semibold text-epecBlue">Recife Antigo (EPEC)</span></div>
+        </div>
+
+        <p class="text-xs text-gray-500">
+          Enviamos uma mensagem de confirmação para o seu WhatsApp. Guarde este comprovante.
+        </p>
+
+        <button id="close-modal-btn" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 rounded-xl transition duration-150">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="relative z-30 py-12 border-t border-white/5 bg-[#070A11] text-xs text-gray-500">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      
+      <div class="text-center md:text-left space-y-1">
+        <p>epec - Escola Pernambucana de Economia Criativa © 2026. Todos os direitos reservados.</p>
+        <p class="text-gray-600 font-medium">Embarcada no ecossistema oficial do Porto Digital.</p>
+      </div>
+
+      <div class="flex gap-6 justify-center">
+        <a href="#" class="hover:text-gray-300 transition-colors">Termos de Uso</a>
+        <a href="#" class="hover:text-gray-300 transition-colors">Políticas de Privacidade</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      
+      // 1. WhatsApp Mask (DDD)
+      const phoneInput = document.getElementById("whatsapp");
+      phoneInput.addEventListener("input", (e) => {
+        let value = e.target.value.replace(/\D/g, "");
+        if (value.length > 11) value = value.slice(0, 11);
+        
+        if (value.length > 10) {
+          value = `(${value.slice(0, 2)}) ${value.slice(2, 7)}-${value.slice(7)}`;
+        } else if (value.length > 6) {
+          value = `(${value.slice(0, 2)}) ${value.slice(2, 6)}-${value.slice(6)}`;
+        } else if (value.length > 2) {
+          value = `(${value.slice(0, 2)}) ${value.slice(2)}`;
+        } else if (value.length > 0) {
+          value = `(${value}`;
+        }
+        e.target.value = value;
+      });
+
+      // 2. Simulated Counter countdown
+      let currentSeats = 8;
+      const counterEl = document.getElementById("vagas-contador");
+      
+      const countdownInterval = setInterval(() => {
+        if (currentSeats > 3) {
+          currentSeats -= Math.random() > 0.7 ? 1 : 0;
+          counterEl.textContent = currentSeats;
+          
+          if (currentSeats <= 3) {
+            counterEl.classList.remove("text-red-500");
+            counterEl.classList.add("text-red-600", "scale-110");
+          }
+        } else {
+          clearInterval(countdownInterval);
+        }
+      }, 25000);
+
+      // 3. Seat Map Initialization and Interactive Handling
+      const seatGridEl = document.getElementById("seat-grid");
+      const seatBadgeEl = document.getElementById("selected-seat-badge");
+      const seatInputEl = document.getElementById("selected-seat");
+      
+      const rows = ["A", "B", "C", "D", "E"];
+      const seatsPerRow = 10;
+      
+      const availableSeats = ["A-3", "B-5", "C-2", "C-8", "D-6", "E-2", "E-8", "E-9"];
+      let selectedSeatId = null;
+
+      rows.forEach(row => {
+        for (let num = 1; num <= seatsPerRow; num++) {
+          const seatId = `${row}-${num}`;
+          const seatButton = document.createElement("button");
+          seatButton.type = "button";
+          seatButton.className = "w-6 h-6 sm:w-7 sm:h-7 rounded text-[9px] font-mono font-bold flex items-center justify-center transition-all duration-300 relative z-20 pointer-events-auto";
+          seatButton.textContent = seatId;
+          seatButton.setAttribute("data-seat-id", seatId);
+
+          if (availableSeats.includes(seatId)) {
+            seatButton.classList.add("seat-available");
+            seatButton.addEventListener("click", () => {
+              if (selectedSeatId === seatId) {
+                seatButton.classList.remove("seat-selected");
+                selectedSeatId = null;
+                seatBadgeEl.textContent = "Nenhuma";
+                seatInputEl.value = "";
+              } else {
+                if (selectedSeatId) {
+                  const prevBtn = seatGridEl.querySelector(`[data-seat-id="${selectedSeatId}"]`);
+                  if (prevBtn) prevBtn.classList.remove("seat-selected");
+                }
+                seatButton.classList.add("seat-selected");
+                selectedSeatId = seatId;
+                seatBadgeEl.textContent = `Cadeira ${seatId}`;
+                seatInputEl.value = seatId;
+              }
+            });
+          } else {
+            seatButton.classList.add("seat-occupied");
+            seatButton.disabled = true;
+          }
+          seatGridEl.appendChild(seatButton);
+        }
+      });
+
+      // 4. Form Submission Handling with Success Modal Popup
+      const form = document.getElementById("lead-form");
+      const successModal = document.getElementById("success-modal");
+      const closeModalBtn = document.getElementById("close-modal-btn");
+      
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        
+        const seatVal = seatInputEl.value;
+        if (!seatVal) {
+          alert("Por favor, selecione uma cadeira no mapa de assentos para continuar.");
+          return;
+        }
+
+        const nameVal = document.getElementById("name").value;
+        const phoneVal = document.getElementById("whatsapp").value;
+        const ageVal = document.getElementById("age-group").value;
+        
+        let ageLabel = ageVal;
+        if (ageVal === "12-17") ageLabel = "12 a 17 anos";
+        if (ageVal === "18-25") ageLabel = "18 a 25 anos";
+        if (ageVal === "other") ageLabel = "Outra idade";
+
+        document.getElementById("summary-name").textContent = nameVal;
+        document.getElementById("summary-phone").textContent = phoneVal;
+        document.getElementById("summary-age").textContent = ageLabel;
+        document.getElementById("summary-seat").textContent = `Fila ${seatVal.split("-")[0]} - Cadeira ${seatVal.split("-")[1]}`;
+
+        const lead = {
+          name: nameVal,
+          phone: phoneVal,
+          ageGroup: ageVal,
+          seat: seatVal,
+          timestamp: new Date().toISOString()
+        };
+        const existingLeads = JSON.parse(localStorage.getItem("epec_leads") || "[]");
+        existingLeads.push(lead);
+        localStorage.setItem("epec_leads", JSON.stringify(existingLeads));
+
+        const bookedBtn = seatGridEl.querySelector(`[data-seat-id="${seatVal}"]`);
+        if (bookedBtn) {
+          bookedBtn.classList.remove("seat-selected", "seat-available");
+          bookedBtn.classList.add("seat-occupied", "text-gray-700");
+          bookedBtn.disabled = true;
+          const idx = availableSeats.indexOf(seatVal);
+          if (idx > -1) availableSeats.splice(idx, 1);
+        }
+
+        if (currentSeats > 3) {
+          currentSeats -= 1;
+          counterEl.textContent = currentSeats;
+        }
+
+        successModal.classList.remove("hidden");
+        form.reset();
+        selectedSeatId = null;
+        seatBadgeEl.textContent = "Nenhuma";
+        seatInputEl.value = "";
+      });
+
+      closeModalBtn.addEventListener("click", () => {
+        successModal.classList.add("hidden");
+      });
+
+      // 5. Real-time Countdown Timer (sessionStorage-persisted CRO trigger)
+      const countdownEl = document.getElementById("countdown-timer");
+      if (countdownEl) {
+        let targetTime = sessionStorage.getItem("epec_countdown_target");
+        if (!targetTime) {
+          // Set target to 2 hours and 45 minutes from first load
+          targetTime = Date.now() + (2 * 60 * 60 + 45 * 60) * 1000;
+          sessionStorage.setItem("epec_countdown_target", targetTime);
+        } else {
+          targetTime = parseInt(targetTime, 10);
+        }
+
+        function updateTimer() {
+          const now = Date.now();
+          const diff = targetTime - now;
+
+          if (diff <= 0) {
+            countdownEl.textContent = "00:00:00";
+            return;
+          }
+
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+          const hh = String(hours).padStart(2, '0');
+          const mm = String(minutes).padStart(2, '0');
+          const ss = String(seconds).padStart(2, '0');
+
+          countdownEl.textContent = `${hh}:${mm}:${ss}`;
+          requestAnimationFrame(updateTimer);
+        }
+        updateTimer();
+      }
+
+      // 6. FAQ Accordion behavior
+      const faqItems = document.querySelectorAll(".faq-item");
+      faqItems.forEach(item => {
+        const trigger = item.querySelector(".faq-trigger");
+        trigger.addEventListener("click", () => {
+          const isActive = item.classList.contains("active");
+          
+          faqItems.forEach(otherItem => {
+            otherItem.classList.remove("active");
+          });
+
+          if (!isActive) {
+            item.classList.add("active");
+          }
+        });
+      });
+
+      // 7. Scroll Reveal Animation using Intersection Observer
+      const revealItems = document.querySelectorAll(".reveal-item");
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px",
+        threshold: 0.08
+      };
+
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("reveal-visible");
+            observer.unobserve(entry.target); // Animates only once
+          }
+        });
+      }, observerOptions);
+
+      revealItems.forEach(item => {
+        observer.observe(item);
+      });
+    });
+
+    // 8. AI TERMINAL SIMULATOR LOGIC
+    const terminalEl = document.getElementById("terminal-body");
+    const blankEl = document.getElementById("preview-blank");
+    const loaderEl = document.getElementById("preview-loader");
+    const loaderTitleEl = document.getElementById("loader-title");
+    const resultEl = document.getElementById("preview-result");
+    const urlEl = document.getElementById("preview-url");
+    const promptInput = document.getElementById("sim-prompt");
+    const simBtn = document.getElementById("sim-btn");
+
+    const simulations = {
+      delivery: {
+        prompt: "Crie um App de Delivery de Hambúrguer chamado 'Neon Burger'",
+        url: "localhost:3000/neon-burger",
+        logs: [
+          { text: "$ antigravity init 'neon-burger'", color: "text-gray-400" },
+          { text: "[SYS] Criando estrutura de pastas... OK", color: "text-green-400" },
+          { text: "[SYS] Instalando dependências (TailwindCSS, Lucide)...", color: "text-green-400" },
+          { text: "[SYS] Escrevendo index.html com layouts responsivos...", color: "text-green-400" },
+          { text: "[SYS] Adicionando scripts de carrinho de compras...", color: "text-green-400" },
+          { text: "[SYS] Compilando pacotes de estilo e minificando scripts...", color: "text-green-400" },
+          { text: "[SYS] Rodando bateria de testes: 4 executados, 4 válidos.", color: "text-blue-400" },
+          { text: "[SYS] Iniciando servidor local...", color: "text-green-400" },
+          { text: "[SYS] Implantação realizada com sucesso!", color: "text-yellow-400" }
+        ],
+        preview: `
+          <div class="w-full flex flex-col h-full bg-[#151B2C] rounded-xl overflow-hidden border border-white/10 text-white">
+            <div class="bg-[#0B0F19] p-4 flex items-center justify-between border-b border-white/5">
+              <span class="font-extrabold text-sm text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-red-500">🍔 NEON BURGER</span>
+              <div class="flex items-center gap-1.5 text-xs text-yellow-400">
+                <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 100-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/></svg>
+                <span id="cart-count" class="font-extrabold bg-red-500 text-white px-2 py-0.5 rounded-full text-[10px]">0</span>
+              </div>
+            </div>
+            <div class="p-4 flex-grow flex flex-col justify-center items-center">
+              <div class="bg-[#0B0F19] border border-white/10 rounded-2xl p-4 w-full max-w-[220px] text-center shadow-lg transition-transform duration-300 hover:scale-105">
+                <div class="text-4xl mb-3">🍔</div>
+                <h4 class="font-bold text-sm">Monster Cheddar</h4>
+                <p class="text-[10px] text-gray-400 mt-1 leading-normal">Blend de 150g, bacon crocante, cheddar cremoso.</p>
+                <div class="flex items-center justify-between mt-4 gap-2">
+                  <span class="text-xs font-extrabold text-green-400">R$ 38,90</span>
+                  <button onclick="document.getElementById('cart-count').textContent = parseInt(document.getElementById('cart-count').textContent)+1" class="bg-epecBlue hover:bg-[#003be0] text-[10px] font-bold px-2.5 py-1.5 rounded-lg transition">Adicionar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      petshop: {
+        prompt: "Crie um Site de Petshop chamado 'Aumigos'",
+        url: "localhost:3000/aumigos",
+        logs: [
+          { text: "$ antigravity init 'aumigos-petshop'", color: "text-gray-400" },
+          { text: "[SYS] Criando estrutura de diretórios estáticos...", color: "text-green-400" },
+          { text: "[SYS] Configurando identidade visual verde/pet...", color: "text-green-400" },
+          { text: "[SYS] Criando componentes de banner e tabela de serviços...", color: "text-green-400" },
+          { text: "[SYS] Adicionando formulário para reserva de banho e tosa...", color: "text-green-400" },
+          { text: "[SYS] Compilando arquivos index.html e main.js...", color: "text-green-400" },
+          { text: "[SYS] Rodando checagem de acessibilidade... OK (WCAG AA)", color: "text-blue-400" },
+          { text: "[SYS] Servidor de preview montado com sucesso.", color: "text-green-400" }
+        ],
+        preview: `
+          <div class="w-full flex flex-col h-full bg-[#151B2C] rounded-xl overflow-hidden border border-white/10 text-white">
+            <div class="bg-gradient-to-r from-teal-500 to-green-500 p-4 text-center">
+              <h3 class="font-extrabold text-xs tracking-wide">🐾 AUMIGOS PETSHOP</h3>
+              <p class="text-[9px] text-teal-100 mt-0.5">O carinho que seu melhor amigo merece.</p>
+            </div>
+            <div class="p-4 flex-grow flex flex-col justify-center items-center">
+              <div class="w-full max-w-[210px] bg-[#0B0F19] border border-white/10 rounded-2xl p-4 space-y-3 shadow-md">
+                <h4 class="text-[10px] font-bold text-gray-200 uppercase tracking-wide border-b border-white/5 pb-2">Agendar Banho</h4>
+                <div class="space-y-2">
+                  <label class="block text-[9px] text-gray-400">Tipo de Banho</label>
+                  <select class="w-full bg-[#151B2C] border border-white/5 rounded-lg px-2 py-1.5 text-[10px] text-white focus:outline-none">
+                    <option>Banho Simples - R$ 45,00</option>
+                    <option>Banho & Tosa - R$ 85,00</option>
+                  </select>
+                </div>
+                <button onclick="this.textContent = 'Agendado! ✓'; this.className = 'w-full bg-green-500 text-white text-[10px] font-bold py-1.5 rounded-lg'" class="w-full bg-teal-500 hover:bg-teal-600 text-[10px] font-bold py-1.5 rounded-lg transition">Confirmar</button>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      email: {
+        prompt: "Crie uma Automação de Email para Clientes Inativos",
+        url: "localhost:3000/email-automation",
+        logs: [
+          { text: "$ antigravity init 'email-automation'", color: "text-gray-400" },
+          { text: "[SYS] Criando script de disparo automático de emails...", color: "text-green-400" },
+          { text: "[SYS] Configurando regras de gatilho SMTP (30 dias inativo)...", color: "text-green-400" },
+          { text: "[SYS] Escrevendo templates HTML de cupom de reengajamento...", color: "text-green-400" },
+          { text: "[SYS] Integrando API de rastreio de clique/abertura...", color: "text-green-400" },
+          { text: "[SYS] Rodando simulação de teste... OK (100% de sucesso)", color: "text-blue-400" },
+          { text: "[SYS] Configurando tarefa agendada (Cron)... OK", color: "text-green-400" },
+          { text: "[SYS] Automação ativa no servidor!", color: "text-yellow-400" }
+        ],
+        preview: `
+          <div class="w-full flex flex-col h-full bg-[#151B2C] rounded-xl overflow-hidden border border-white/10 text-white">
+            <div class="bg-[#0B0F19] p-4 flex items-center justify-between border-b border-white/5">
+              <span class="font-extrabold text-xs text-gray-200">📧 AUTOMAÇÃO ATIVA</span>
+              <span class="w-2 h-2 rounded-full bg-green-500 animate-ping"></span>
+            </div>
+            <div class="p-4 flex-grow flex flex-col justify-center gap-3">
+              <h4 class="text-[10px] font-bold text-gray-300">Desempenho da Campanha ("Volta pra Casa")</h4>
+              <div class="grid grid-cols-2 gap-2">
+                <div class="bg-[#0B0F19] border border-white/10 rounded-xl p-2.5 text-center">
+                  <span class="block text-[8px] text-gray-400">Emails Enviados</span>
+                  <span class="text-sm font-extrabold text-white">1.840</span>
+                </div>
+                <div class="bg-[#0B0F19] border border-white/10 rounded-xl p-2.5 text-center">
+                  <span class="block text-[8px] text-gray-400">Taxa Abertura</span>
+                  <span class="text-sm font-extrabold text-techPurple">74.2%</span>
+                </div>
+              </div>
+              <div class="space-y-1">
+                <div class="flex justify-between text-[9px] text-gray-400"><span>Cliques no Cupom (30% OFF)</span> <span>42%</span></div>
+                <div class="w-full bg-[#0B0F19] rounded-full h-1 overflow-hidden">
+                  <div class="bg-epecBlue h-full rounded-full" style="width: 42%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      custom: {
+        prompt: "",
+        url: "localhost:3000/projeto-personalizado",
+        logs: [
+          { text: "$ antigravity init 'projeto-personalizado'", color: "text-gray-400" },
+          { text: "[SYS] Inicializando gerador de código por prompt...", color: "text-green-400" },
+          { text: "[SYS] Escrevendo código para o projeto customizado...", color: "text-green-400" },
+          { text: "[SYS] Integrando estilos Tailwind e lógicas JS...", color: "text-green-400" },
+          { text: "[SYS] Compilando arquivos de deploy...", color: "text-green-400" },
+          { text: "[SYS] Executando testes locais... OK", color: "text-blue-400" },
+          { text: "[SYS] Implantação realizada com sucesso!", color: "text-yellow-400" }
+        ],
+        preview: (promptText) => `
+          <div class="w-full flex flex-col h-full bg-[#151B2C] rounded-xl overflow-hidden border border-white/10 text-white">
+            <div class="bg-[#0B0F19] p-4 flex items-center justify-between border-b border-white/5">
+              <span class="font-extrabold text-xs text-gray-200">🚀 PROJETO PRONTO</span>
+              <span class="text-[9px] bg-epecBlue/20 text-epecBlue border border-epecBlue/30 px-2 py-0.5 rounded-full font-bold">Gerado com IA</span>
+            </div>
+            <div class="p-4 flex-grow flex flex-col justify-center items-center text-center space-y-3">
+              <div class="w-10 h-10 rounded-xl bg-epecBlue/10 border border-epecBlue/30 flex items-center justify-center text-epecBlue shadow-inner">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
+              </div>
+              <div>
+                <h4 class="font-bold text-xs">Seu site foi implantado!</h4>
+                <p class="text-[9px] text-gray-400 mt-0.5 leading-relaxed">Criado com base no seu prompt:</p>
+                <p class="text-[9px] text-epecBlue font-bold italic mt-1.5 border border-white/5 bg-black/25 px-2 py-1.5 rounded-lg max-w-[200px] truncate mx-auto">"${promptText}"</p>
+              </div>
+              <button onclick="alert('Participe do nosso treinamento presencial para aprender a criar e publicar sistemas reais como este!')" class="bg-gradient-to-r from-epecBlue to-techPurple hover:brightness-110 text-[9px] font-extrabold px-3 py-2 rounded-lg transition shadow-md">Ver Detalhes do Projeto</button>
+            </div>
+          </div>
+        `
+      }
+    };
+
+    let simRunning = false;
+
+    function runSimulation(type) {
+      if (simRunning) return;
+      simRunning = true;
+
+      const sim = simulations[type];
+      
+      // Update UI state
+      promptInput.value = sim.prompt;
+      simBtn.disabled = true;
+      simBtn.classList.add("opacity-50");
+      urlEl.textContent = sim.url;
+
+      // Reset panels
+      terminalEl.innerHTML = `<div class="text-gray-500 mb-2"># Antigravity AI Code Runner v3.5</div>`;
+      blankEl.classList.add("hidden");
+      resultEl.classList.add("hidden", "opacity-0");
+      loaderEl.classList.remove("hidden");
+      loaderTitleEl.textContent = "Inicializando Agente...";
+
+      // Write logs with delays
+      let logIndex = 0;
+      
+      function printLog() {
+        if (logIndex < sim.logs.length) {
+          const log = sim.logs[logIndex];
+          const div = document.createElement("div");
+          div.className = log.color + " mt-1.5";
+          div.textContent = log.text;
+          terminalEl.appendChild(div);
+          terminalEl.scrollTop = terminalEl.scrollHeight;
+
+          // Dynamically change loader text based on progress
+          if (logIndex === 2) loaderTitleEl.textContent = "Baixando dependências...";
+          if (logIndex === 4) loaderTitleEl.textContent = "Escrevendo arquivos de código...";
+          if (logIndex === 6) loaderTitleEl.textContent = "Rodando suíte de testes...";
+
+          logIndex++;
+          setTimeout(printLog, 450); // delay between logs
+        } else {
+          // Finished terminal logs, show final preview
+          setTimeout(() => {
+            loaderEl.classList.add("hidden");
+            resultEl.innerHTML = sim.preview;
+            resultEl.classList.remove("hidden");
+            setTimeout(() => {
+              resultEl.classList.remove("opacity-0");
+            }, 50);
+
+            // Re-enable elements
+            simBtn.disabled = false;
+            simBtn.classList.remove("opacity-50");
+            simRunning = false;
+          }, 300);
+        }
+      }
+
+      printLog();
+    }
+
+    function runCustomSimulation() {
+      const promptVal = promptInput.value.trim();
+      if (!promptVal || simRunning) return;
+      simRunning = true;
+
+      simBtn.disabled = true;
+      simBtn.classList.add("opacity-50");
+      urlEl.textContent = "localhost:3000/projeto-personalizado";
+
+      // Reset panels
+      terminalEl.innerHTML = `<div class="text-gray-500 mb-2"># Antigravity AI Code Runner v3.5</div>`;
+      blankEl.classList.add("hidden");
+      resultEl.classList.add("hidden", "opacity-0");
+      loaderEl.classList.remove("hidden");
+      loaderTitleEl.textContent = "Inicializando Agente...";
+
+      const customSim = simulations.custom;
+      let logIndex = 0;
+
+      function printCustomLog() {
+        if (logIndex < customSim.logs.length) {
+          let log = customSim.logs[logIndex];
+          const div = document.createElement("div");
+          div.className = log.color + " mt-1.5";
+          
+          // Inject user prompt on the second log
+          if (logIndex === 1) {
+            div.textContent = `[SYS] Analisando prompt personalizado: "${promptVal}"...`;
+          } else {
+            div.textContent = log.text;
+          }
+
+          terminalEl.appendChild(div);
+          terminalEl.scrollTop = terminalEl.scrollHeight;
+
+          if (logIndex === 2) loaderTitleEl.textContent = "Gerando scripts e HTML customizados...";
+          if (logIndex === 4) loaderTitleEl.textContent = "Compilando pacotes e estruturando CSS...";
+          
+          logIndex++;
+          setTimeout(printCustomLog, 500);
+        } else {
+          setTimeout(() => {
+            loaderEl.classList.add("hidden");
+            resultEl.innerHTML = customSim.preview(promptVal);
+            resultEl.classList.remove("hidden");
+            setTimeout(() => {
+              resultEl.classList.remove("opacity-0");
+            }, 50);
+
+            simBtn.disabled = false;
+            simBtn.classList.remove("opacity-50");
+            simRunning = false;
+          }, 350);
+        }
+      }
+
+      printCustomLog();
+    }
+  </script>
+</body>
+</html>
