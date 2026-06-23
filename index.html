@@ -29,6 +29,9 @@
     }
   </script>
   
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <!-- Custom Stylesheet -->
   <link rel="stylesheet" href="style.css">
   
@@ -853,6 +856,10 @@
 
   <!-- Scripts -->
   <script>
+    const supabaseUrl = "https://blunyljmskntlwyeyate.supabase.co";
+    const supabaseKey = "sb_publishable_cPvaQI56uXDVk2obUad1zQ_ZsUCiQYd";
+    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
     document.addEventListener("DOMContentLoaded", () => {
       
       // 1. WhatsApp Mask (DDD)
@@ -882,48 +889,83 @@
       const rows = ["A", "B", "C", "D", "E"];
       const seatsPerRow = 10;
       
-      const availableSeats = ["A-3", "B-5", "C-2", "C-8", "D-6", "E-2", "E-8", "E-9"];
-      let currentSeats = availableSeats.length;
+      let availableSeats = [];
+      let currentSeats = 0;
       let selectedSeatId = null;
 
-      // Initialize counter with actual count
-      counterEl.textContent = currentSeats;
-
-      rows.forEach(row => {
-        for (let num = 1; num <= seatsPerRow; num++) {
-          const seatId = `${row}-${num}`;
-          const seatButton = document.createElement("button");
-          seatButton.type = "button";
-          seatButton.className = "rounded font-mono font-bold flex items-center justify-center transition-all duration-300 relative z-20 pointer-events-auto";
-          seatButton.textContent = seatId;
-          seatButton.setAttribute("data-seat-id", seatId);
-
-          if (availableSeats.includes(seatId)) {
-            seatButton.classList.add("seat-available");
-            seatButton.addEventListener("click", () => {
-              if (selectedSeatId === seatId) {
-                seatButton.classList.remove("seat-selected");
-                selectedSeatId = null;
-                seatBadgeEl.textContent = "Nenhuma";
-                seatInputEl.value = "";
-              } else {
-                if (selectedSeatId) {
-                  const prevBtn = seatGridEl.querySelector(`[data-seat-id="${selectedSeatId}"]`);
-                  if (prevBtn) prevBtn.classList.remove("seat-selected");
-                }
-                seatButton.classList.add("seat-selected");
-                selectedSeatId = seatId;
-                seatBadgeEl.textContent = `Cadeira ${seatId}`;
-                seatInputEl.value = seatId;
-              }
-            });
-          } else {
-            seatButton.classList.add("seat-occupied");
-            seatButton.disabled = true;
+      async function initSeatMap() {
+        let bookedSeats = [];
+        try {
+          const { data, error } = await supabase.from('epec_leads').select('seat');
+          if (error) {
+            console.error("Erro ao buscar assentos:", error);
+          } else if (data) {
+            bookedSeats = data.map(d => d.seat);
           }
-          seatGridEl.appendChild(seatButton);
+        } catch (err) {
+          console.error("Erro na conexão com Supabase:", err);
         }
-      });
+
+        seatGridEl.innerHTML = "";
+
+        const allSeats = [];
+        rows.forEach(row => {
+          for (let num = 1; num <= seatsPerRow; num++) {
+            allSeats.push(`${row}-${num}`);
+          }
+        });
+
+        availableSeats = allSeats.filter(s => !bookedSeats.includes(s));
+        currentSeats = availableSeats.length;
+        counterEl.textContent = currentSeats;
+
+        if (currentSeats <= 3) {
+          counterEl.classList.remove("text-red-500");
+          counterEl.classList.add("text-red-600", "scale-110");
+        } else {
+          counterEl.classList.remove("text-red-600", "scale-110");
+          counterEl.classList.add("text-red-500");
+        }
+
+        rows.forEach(row => {
+          for (let num = 1; num <= seatsPerRow; num++) {
+            const seatId = `${row}-${num}`;
+            const seatButton = document.createElement("button");
+            seatButton.type = "button";
+            seatButton.className = "rounded font-mono font-bold flex items-center justify-center transition-all duration-300 relative z-20 pointer-events-auto";
+            seatButton.textContent = seatId;
+            seatButton.setAttribute("data-seat-id", seatId);
+
+            if (bookedSeats.includes(seatId)) {
+              seatButton.classList.add("seat-occupied");
+              seatButton.disabled = true;
+            } else {
+              seatButton.classList.add("seat-available");
+              seatButton.addEventListener("click", () => {
+                if (selectedSeatId === seatId) {
+                  seatButton.classList.remove("seat-selected");
+                  selectedSeatId = null;
+                  seatBadgeEl.textContent = "Nenhuma";
+                  seatInputEl.value = "";
+                } else {
+                  if (selectedSeatId) {
+                    const prevBtn = seatGridEl.querySelector(`[data-seat-id="${selectedSeatId}"]`);
+                    if (prevBtn) prevBtn.classList.remove("seat-selected");
+                  }
+                  seatButton.classList.add("seat-selected");
+                  selectedSeatId = seatId;
+                  seatBadgeEl.textContent = `Cadeira ${seatId}`;
+                  seatInputEl.value = seatId;
+                }
+              });
+            }
+            seatGridEl.appendChild(seatButton);
+          }
+        });
+      }
+
+      // Inicializa o mapa
+      initSeatMap();
 
       // 3. Simulated Seat Loss countdown (Consistently updates grid and count)
       const countdownInterval = setInterval(() => {
@@ -1003,7 +1045,7 @@
       const successModal = document.getElementById("success-modal");
       const closeModalBtn = document.getElementById("close-modal-btn");
       
-      form.addEventListener("submit", (e) => {
+      form.addEventListener("submit", async (e) => {
         e.preventDefault();
         
         const seatVal = seatInputEl.value;
@@ -1015,45 +1057,89 @@
         const nameVal = document.getElementById("name").value;
         const phoneVal = document.getElementById("whatsapp").value;
         const ageVal = document.getElementById("age-group").value;
-        
-        let ageLabel = ageVal;
-        if (ageVal === "12-17") ageLabel = "12 a 17 anos";
-        if (ageVal === "18-25") ageLabel = "18 a 25 anos";
-        if (ageVal === "other") ageLabel = "Outra idade";
 
-        document.getElementById("summary-name").textContent = nameVal;
-        document.getElementById("summary-phone").textContent = phoneVal;
-        document.getElementById("summary-age").textContent = ageLabel;
-        document.getElementById("summary-seat").textContent = `Fila ${seatVal.split("-")[0]} - Cadeira ${seatVal.split("-")[1]}`;
+        // Desabilita botão de envio para evitar duplo clique
+        const submitBtn = form.querySelector("button[type='submit']");
+        const originalBtnText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span>Processando...</span>`;
 
-        const lead = {
-          name: nameVal,
-          phone: phoneVal,
-          ageGroup: ageVal,
-          seat: seatVal,
-          timestamp: new Date().toISOString()
-        };
-        const existingLeads = JSON.parse(localStorage.getItem("epec_leads") || "[]");
-        existingLeads.push(lead);
-        localStorage.setItem("epec_leads", JSON.stringify(existingLeads));
+        try {
+          // Salvar inscrição no Supabase
+          const { error } = await supabase
+            .from('epec_leads')
+            .insert([
+              {
+                name: nameVal,
+                whatsapp: phoneVal,
+                age_group: ageVal,
+                seat: seatVal
+              }
+            ]);
 
-        const bookedBtn = seatGridEl.querySelector(`[data-seat-id="${seatVal}"]`);
-        if (bookedBtn) {
-          bookedBtn.classList.remove("seat-selected", "seat-available");
-          bookedBtn.classList.add("seat-occupied");
-          bookedBtn.disabled = true;
-          const idx = availableSeats.indexOf(seatVal);
-          if (idx > -1) availableSeats.splice(idx, 1);
+          if (error) {
+            if (error.code === '23505') {
+              alert("Esta cadeira acabou de ser reservada por outra pessoa. Por favor, escolha outro assento.");
+              await initSeatMap();
+            } else {
+              alert("Erro ao realizar cadastro no banco de dados: " + error.message);
+            }
+            return;
+          }
+
+          // Backup local (opcional/histórico)
+          const lead = {
+            name: nameVal,
+            phone: phoneVal,
+            ageGroup: ageVal,
+            seat: seatVal,
+            timestamp: new Date().toISOString()
+          };
+          const existingLeads = JSON.parse(localStorage.getItem("epec_leads") || "[]");
+          existingLeads.push(lead);
+          localStorage.setItem("epec_leads", JSON.stringify(existingLeads));
+
+          let ageLabel = ageVal;
+          if (ageVal === "12-17") ageLabel = "12 a 17 anos";
+          if (ageVal === "18-25") ageLabel = "18 a 25 anos";
+          if (ageVal === "other") ageLabel = "Outra idade";
+
+          document.getElementById("summary-name").textContent = nameVal;
+          document.getElementById("summary-phone").textContent = phoneVal;
+          document.getElementById("summary-age").textContent = ageLabel;
+          document.getElementById("summary-seat").textContent = `Fila ${seatVal.split("-")[0]} - Cadeira ${seatVal.split("-")[1]}`;
+
+          // Atualiza botão do assento no grid localmente
+          const bookedBtn = seatGridEl.querySelector(`[data-seat-id="${seatVal}"]`);
+          if (bookedBtn) {
+            bookedBtn.classList.remove("seat-selected", "seat-available");
+            bookedBtn.classList.add("seat-occupied");
+            bookedBtn.disabled = true;
+            const idx = availableSeats.indexOf(seatVal);
+            if (idx > -1) availableSeats.splice(idx, 1);
+          }
+
+          currentSeats = availableSeats.length;
+          counterEl.textContent = currentSeats;
+
+          if (currentSeats <= 3) {
+            counterEl.classList.remove("text-red-500");
+            counterEl.classList.add("text-red-600", "scale-110");
+          }
+
+          successModal.classList.remove("hidden");
+          form.reset();
+          selectedSeatId = null;
+          seatBadgeEl.textContent = "Nenhuma";
+          seatInputEl.value = "";
+
+        } catch (err) {
+          console.error("Erro no envio:", err);
+          alert("Ocorreu um erro ao processar seu cadastro. Por favor, tente novamente.");
+        } finally {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
         }
-
-        currentSeats = availableSeats.length;
-        counterEl.textContent = currentSeats;
-
-        successModal.classList.remove("hidden");
-        form.reset();
-        selectedSeatId = null;
-        seatBadgeEl.textContent = "Nenhuma";
-        seatInputEl.value = "";
       });
 
       closeModalBtn.addEventListener("click", () => {
