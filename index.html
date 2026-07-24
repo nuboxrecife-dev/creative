@@ -677,45 +677,28 @@
             POUCAS VAGAS DISPONÍVEIS
           </div>
           <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">
-            Garanta Sua <span class="text-transparent bg-clip-text bg-gradient-to-r from-epecBlue to-techPurple">Cadeira Gratuita</span>
+            Garanta sua <span class="text-transparent bg-clip-text bg-gradient-to-r from-epecBlue to-techPurple">Vaga Gratuita!</span>
           </h2>
           <p class="text-gray-400 text-xs sm:text-sm">
-            Selecione seu assento no mapa de cadeiras abaixo e conclua seu cadastro de forma imediata.
+            Preencha os campos abaixo e conclua seu cadastro de forma imediata.
           </p>
         </div>
 
         <!-- Form Element -->
         <form id="lead-form" class="relative z-10 space-y-6">
           
-          <!-- Seat Map Interactive Grid -->
+          <!-- Space Photo instead of Seat Grid -->
           <div class="flex flex-col border-b border-white/10 pb-6 mb-2">
             <label class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-3 pl-1">
-              <span class="text-epecBlue font-mono mr-1.5">[!]</span> Escolha sua Cadeira no Auditório
+              <span class="text-epecBlue font-mono mr-1.5">[!]</span> O Espaço do Evento (Hub Plural Brum)
             </label>
             
-            <!-- Stage simulation graphic -->
-            <div class="w-full text-center text-[8px] font-mono text-gray-500 border-b border-white/5 pb-2 mb-4 tracking-[0.2em] uppercase select-none">
-              [ PALCO / TELA DE PROJEÇÃO ]
+            <div class="relative rounded-2xl overflow-hidden border border-white/10 shadow-lg aspect-[4/3] w-full max-w-md mx-auto mb-2">
+              <img src="auditorio_brum.png" alt="Auditório Hub Plural Brum" class="w-full h-full object-cover">
             </div>
 
-            <!-- Seat grid (50 dots) -->
-            <div id="seat-grid" class="relative z-20 pointer-events-auto grid grid-cols-10 gap-2 max-w-[340px] mx-auto w-full px-1">
-              <!-- Injected dynamically via JavaScript -->
-            </div>
-
-            <!-- Display Selection -->
-            <div class="flex items-center justify-between mt-5 px-1.5 text-xs">
-              <span class="text-gray-400 font-medium">Cadeira Selecionada:</span>
-              <span id="selected-seat-badge" class="text-transparent bg-clip-text bg-gradient-to-r from-epecBlue to-[#00f0ff] font-extrabold uppercase tracking-widest text-sm">Nenhuma</span>
-              <input type="hidden" id="selected-seat" name="selected-seat" required>
-            </div>
-
-            <!-- Legend -->
-            <div class="flex items-center justify-center gap-4 mt-4 text-[9px] text-gray-500 font-mono">
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-white/5 border border-white/5"></span> Ocupado</span>
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-epecBlue/20 border border-epecBlue/40 animate-pulse"></span> Disponível</span>
-              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded bg-[#00f0ff] border-[#00f0ff] shadow-[0_0_5px_#00f0ff]"></span> Escolhido</span>
-            </div>
+            <!-- Hidden inputs to maintain functionality -->
+            <input type="hidden" id="selected-seat" name="selected-seat">
           </div>
           <!-- Full Name -->
           <div class="group flex flex-col">
@@ -1021,9 +1004,8 @@
         e.target.value = value;
       });
 
-      // 2. Seat Map Initialization and Interactive Handling
+      // 2. Seat Map Initialization (Calculates available count and auto-assigns hidden seat)
       const seatGridEl = document.getElementById("seat-grid");
-      const seatBadgeEl = document.getElementById("selected-seat-badge");
       const seatInputEl = document.getElementById("selected-seat");
       const counterEl = document.getElementById("vagas-contador");
       
@@ -1032,7 +1014,6 @@
       
       let availableSeats = [];
       let currentSeats = 0;
-      let selectedSeatId = null;
 
       async function initSeatMap() {
         let bookedSeats = [];
@@ -1047,7 +1028,7 @@
           console.error("Erro na conexão com Supabase:", err);
         }
 
-        seatGridEl.innerHTML = "";
+        if (seatGridEl) seatGridEl.innerHTML = "";
 
         const allSeats = [];
         rows.forEach(row => {
@@ -1067,42 +1048,6 @@
           counterEl.classList.remove("text-red-600", "scale-110");
           counterEl.classList.add("text-red-500");
         }
-
-        rows.forEach(row => {
-          for (let num = 1; num <= seatsPerRow; num++) {
-            const seatId = `${row}-${num}`;
-            const seatButton = document.createElement("button");
-            seatButton.type = "button";
-            seatButton.className = "rounded font-mono font-bold flex items-center justify-center transition-all duration-300 relative z-20 pointer-events-auto";
-            seatButton.textContent = seatId;
-            seatButton.setAttribute("data-seat-id", seatId);
-
-            if (bookedSeats.includes(seatId)) {
-              seatButton.classList.add("seat-occupied");
-              seatButton.disabled = true;
-            } else {
-              seatButton.classList.add("seat-available");
-              seatButton.addEventListener("click", () => {
-                if (selectedSeatId === seatId) {
-                  seatButton.classList.remove("seat-selected");
-                  selectedSeatId = null;
-                  seatBadgeEl.textContent = "Nenhuma";
-                  seatInputEl.value = "";
-                } else {
-                  if (selectedSeatId) {
-                    const prevBtn = seatGridEl.querySelector(`[data-seat-id="${selectedSeatId}"]`);
-                    if (prevBtn) prevBtn.classList.remove("seat-selected");
-                  }
-                  seatButton.classList.add("seat-selected");
-                  selectedSeatId = seatId;
-                  seatBadgeEl.textContent = `Cadeira ${seatId}`;
-                  seatInputEl.value = seatId;
-                }
-              });
-            }
-            seatGridEl.appendChild(seatButton);
-          }
-        });
       }
 
       // Inicializa o mapa
@@ -1130,7 +1075,7 @@
           const randomIdx = Math.floor(Math.random() * availableSeats.length);
           const seatId = availableSeats.splice(randomIdx, 1)[0];
           
-          const bookedBtn = seatGridEl.querySelector(`[data-seat-id="${seatId}"]`);
+          const bookedBtn = seatGridEl ? seatGridEl.querySelector(`[data-seat-id="${seatId}"]`) : null;
           if (bookedBtn) {
             bookedBtn.classList.remove("seat-selected", "seat-available");
             bookedBtn.classList.add("seat-occupied");
@@ -1205,10 +1150,15 @@
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         
-        const seatVal = seatInputEl.value;
+        let seatVal = seatInputEl.value;
         if (!seatVal) {
-          alert("Por favor, selecione uma cadeira no mapa de assentos para continuar.");
-          return;
+          if (availableSeats && availableSeats.length > 0) {
+            seatVal = availableSeats[0];
+            seatInputEl.value = seatVal;
+          } else {
+            alert("Desculpe, o evento já está com as vagas esgotadas!");
+            return;
+          }
         }
 
         const nameVal = document.getElementById("name").value;
