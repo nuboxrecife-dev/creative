@@ -239,6 +239,16 @@ body {
 
 /* Timeline Custom Styles */
 .timeline-connector {
+  position: relative;
+}
+
+.timeline-connector::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
   background: linear-gradient(to bottom, var(--epec-blue) 0%, var(--tech-purple) 100%);
   box-shadow: 0 0 10px rgba(0, 71, 255, 0.3);
 }
