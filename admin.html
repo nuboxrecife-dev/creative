@@ -156,7 +156,7 @@
         <!-- Metric 2 -->
         <div class="bg-[#151B2C]/70 border border-white/10 rounded-2xl p-6 relative overflow-hidden">
           <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Cadeiras Disponíveis</span>
-          <span id="metric-available" class="text-3xl font-black text-[#00f0ff] mt-1 block">50</span>
+          <span id="metric-available" class="text-3xl font-black text-[#00f0ff] mt-1 block">220</span>
           <div class="absolute -right-4 -bottom-4 w-16 h-16 bg-techPurple/10 rounded-full filter blur-md"></div>
         </div>
         <!-- Metric 3 -->
@@ -415,8 +415,8 @@
     // 3. Update Metrics Grid
     function updateMetrics() {
       const totalCount = leadsList.length;
-      const availableCount = Math.max(0, 50 - totalCount);
-      const occupancyRate = (totalCount / 50) * 100;
+      const availableCount = Math.max(0, 220 - totalCount);
+      const occupancyRate = (totalCount / 220) * 100;
 
       metricTotal.textContent = totalCount;
       metricAvailable.textContent = availableCount;
