@@ -699,25 +699,16 @@
             </div>
           </div>
 
-          <!-- Age Group -->
+          <!-- Birth Date -->
           <div class="group flex flex-col">
-            <label for="age-group" class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2 pl-1 group-focus-within:text-epecBlue transition-colors duration-300">
-              <span class="text-epecBlue font-mono mr-1">[03]</span> Faixa Etária
+            <label for="birthdate" class="block text-[10px] font-extrabold text-gray-400 uppercase tracking-widest mb-2 pl-1 group-focus-within:text-epecBlue transition-colors duration-300">
+              <span class="text-epecBlue font-mono mr-1">[03]</span> Data de Nascimento
             </label>
             <div class="relative">
               <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-500 group-focus-within:text-epecBlue transition-colors duration-300">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
               </div>
-              <select id="age-group" required class="w-full appearance-none bg-[#0B0F19]/60 border border-white/10 rounded-xl pl-11 pr-10 py-3.5 text-sm text-white focus:outline-none focus:border-epecBlue focus:ring-2 focus:ring-epecBlue/20 transition duration-300 shadow-inner">
-                <option value="" disabled selected class="bg-[#151B2C]">Selecione sua faixa etária</option>
-                <option value="12-17" class="bg-[#151B2C]">12 a 17 anos (Menor de Idade)</option>
-                <option value="18-25" class="bg-[#151B2C]">18 a 25 anos (Jovem Adulto)</option>
-                <option value="other" class="bg-[#151B2C]">Outra idade</option>
-              </select>
-              <!-- Custom select arrow -->
-              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-              </div>
+              <input type="date" id="birthdate" required class="w-full bg-[#0B0F19]/60 border border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-epecBlue focus:ring-2 focus:ring-epecBlue/20 transition duration-300 shadow-inner [color-scheme:dark]">
             </div>
           </div>
 
@@ -1136,7 +1127,8 @@
 
         const nameVal = document.getElementById("name").value;
         const phoneVal = document.getElementById("whatsapp").value;
-        const ageVal = document.getElementById("age-group").value;
+        const birthdateEl = document.getElementById("birthdate");
+        const birthdateVal = birthdateEl ? birthdateEl.value : "";
 
         // Desabilita botão de envio para evitar duplo clique
         const submitBtn = form.querySelector("button[type='submit']");
@@ -1168,7 +1160,7 @@
               {
                 name: nameVal,
                 whatsapp: phoneVal,
-                age_group: ageVal,
+                age_group: birthdateVal,
                 seat: seatVal
               }
             ]);
