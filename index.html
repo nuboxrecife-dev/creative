@@ -1375,29 +1375,29 @@
             });
           });
 
-          // Atualiza botão do assento no grid localmente
-          const bookedBtn = seatGridEl.querySelector(`[data-seat-id="${seatVal}"]`);
-          if (bookedBtn) {
-            bookedBtn.classList.remove("seat-selected", "seat-available");
-            bookedBtn.classList.add("seat-occupied");
-            bookedBtn.disabled = true;
+          // Atualiza botão do assento no grid localmente (se o grid existir)
+          if (seatGridEl) {
+            const bookedBtn = seatGridEl.querySelector(`[data-seat-id="${seatVal}"]`);
+            if (bookedBtn) {
+              bookedBtn.classList.remove("seat-selected", "seat-available");
+              bookedBtn.classList.add("seat-occupied");
+              bookedBtn.disabled = true;
+            }
+          }
+
+          if (Array.isArray(availableSeats)) {
             const idx = availableSeats.indexOf(seatVal);
             if (idx > -1) availableSeats.splice(idx, 1);
+            currentSeats = availableSeats.length;
+            if (counterEl) counterEl.textContent = currentSeats;
           }
 
-          currentSeats = availableSeats.length;
-          counterEl.textContent = currentSeats;
-
-          if (currentSeats <= 3) {
-            counterEl.classList.remove("text-red-500");
-            counterEl.classList.add("text-red-600", "scale-110");
+          if (typeof successModal !== 'undefined' && successModal) {
+            successModal.classList.remove("hidden");
           }
-
-          successModal.classList.remove("hidden");
           form.reset();
-          selectedSeatId = null;
-          seatBadgeEl.textContent = "Nenhuma";
-          seatInputEl.value = "";
+          if (typeof selectedSeatId !== 'undefined') selectedSeatId = null;
+          if (seatInputEl) seatInputEl.value = "";
 
         } catch (err) {
           console.error("Erro no envio:", err);
