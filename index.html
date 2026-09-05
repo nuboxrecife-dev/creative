@@ -1114,11 +1114,12 @@
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         
+        let seatVal = (seatInputEl && seatInputEl.value) ? seatInputEl.value : "Garantida";
+
         const nameVal = document.getElementById("name").value;
         const phoneVal = document.getElementById("whatsapp").value;
         const birthdateEl = document.getElementById("birthdate");
         const birthdateVal = birthdateEl ? birthdateEl.value : "";
-        const seatVal = "Garantida";
 
         // Desabilita botão de envio para evitar duplo clique
         const submitBtn = form.querySelector("button[type='submit']");
@@ -1127,6 +1128,47 @@
         submitBtn.innerHTML = `<span>Processando...</span>`;
 
         try {
+          // Tentar verificar e salvar no Supabase (se acessível)
+          try {
+            const { data: dbLeads, error: checkError } = await supabaseClient
+              .from('epec_leads')
+              .select('id, name')
+              .eq('whatsapp', phoneVal)
+              .limit(1);
+
+            if (!checkError && dbLeads && dbLeads.length > 0) {
+              alert(`O WhatsApp ${phoneVal} já está cadastrado para o participante "${dbLeads[0].name}". Por favor, utilize outro número.`);
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnText;
+              return;
+            }
+          } catch (supaCheckErr) {
+            console.warn("Supabase check ignorado por indisponibilidade:", supaCheckErr);
+          }
+
+          try {
+            const { error: insertError } = await supabaseClient
+              .from('epec_leads')
+              .insert([
+                {
+                  name: nameVal,
+                  whatsapp: phoneVal,
+                  age_group: birthdateVal,
+                  seat: seatVal
+                }
+              ]);
+
+            if (insertError && insertError.code === '23505') {
+              alert("Esta cadeira acabou de ser reservada por outra pessoa. Por favor, escolha outro assento.");
+              await initSeatMap();
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnText;
+              return;
+            }
+          } catch (supaInsertErr) {
+            console.warn("Supabase insert ignorado por indisponibilidade:", supaInsertErr);
+          }
+
           // Enviar lead para o Google Sheets (Apps Script Webhook)
           try {
             fetch('https://script.google.com/macros/s/AKfycbzJ2_PSMo0tLrA3quSlMKomG14Ss20hIhoyRPX0cEdGnPcolssB1JHriI_aluYOgiQ/exec', {
@@ -1139,24 +1181,10 @@
                 birthdate: birthdateVal,
                 seat: seatVal
               })
-            }).catch(err => console.error("Erro Webhook Google Sheets:", err));
+            }).catch(e => console.error("Erro Webhook Google Sheets:", e));
           } catch (sheetErr) {
             console.error("Erro Webhook:", sheetErr);
           }
-
-          // Salvar em segundo plano no Supabase (se disponível)
-          try {
-            supabaseClient
-              .from('epec_leads')
-              .insert([
-                {
-                  name: nameVal,
-                  whatsapp: phoneVal,
-                  age_group: birthdateVal,
-                  seat: seatVal
-                }
-              ]).then(() => console.log("Supabase salvo")).catch(err => console.warn("Supabase aviso:", err));
-          } catch (supaErr) {}
 
           // Disparar evento de conversão no Google Analytics
           if (typeof gtag === 'function') {
@@ -1167,49 +1195,200 @@
             });
           }
 
-          // Backup local
+          // Backup local (opcional/histórico)
           const lead = {
             name: nameVal,
             phone: phoneVal,
-            birthdate: birthdateVal,
+            ageGroup: ageVal,
+            seat: seatVal,
             timestamp: new Date().toISOString()
           };
           const existingLeads = JSON.parse(localStorage.getItem("epec_leads") || "[]");
           existingLeads.push(lead);
           localStorage.setItem("epec_leads", JSON.stringify(existingLeads));
 
-          const ticketCode = `EPEC-${Math.floor(100000 + Math.random() * 900000)}`;
+          const ticketCode = `EPEC-${seatVal.replace("-", "")}-${Math.floor(1000 + Math.random() * 9000)}`;
           document.getElementById("ticket-code").textContent = ticketCode;
 
           document.getElementById("summary-name").textContent = nameVal;
           document.getElementById("summary-phone").textContent = phoneVal;
-          document.getElementById("summary-seat").textContent = "Garantida";
+          document.getElementById("summary-seat").textContent = seatVal;
 
-          successModal.classList.remove("hidden");
-          form.reset();
+          // Disparo automático do WhatsApp em segundo plano
+          setTimeout(async () => {
+            try {
+              const ticketEl = document.getElementById("ticket-wrapper");
+              const originalShadow = ticketEl.querySelector("#event-ticket").style.boxShadow;
+              ticketEl.querySelector("#event-ticket").style.boxShadow = 'none';
 
-          // Configura link de compartilhamento do WhatsApp no modal
+              const canvas = await html2canvas(ticketEl, {
+                backgroundColor: '#0B0F19',
+                scale: 2,
+                useCORS: true,
+                logging: false
+              });
+              ticketEl.querySelector("#event-ticket").style.boxShadow = originalShadow;
+
+              canvas.toBlob(async (blob) => {
+                if (!blob) return;
+                const fileName = `ingresso-${seatVal}-${Date.now()}.png`;
+
+                // Upload para o Supabase Storage (bucket 'ingressos')
+                const { data: uploadData, error: uploadError } = await supabaseClient
+                  .storage
+                  .from('ingressos')
+                  .upload(fileName, blob, {
+                    cacheControl: '3600',
+                    upsert: false
+                  });
+
+                if (uploadError) {
+                  console.warn("Upload falhou (crie o bucket público 'ingressos' no Supabase para ativar o envio automático):", uploadError.message);
+                } else {
+                  const { data } = supabaseClient
+                    .storage
+                    .from('ingressos')
+                    .getPublicUrl(fileName);
+                  const publicUrl = data.publicUrl;
+                  console.log("Ingresso enviado ao storage. URL:", publicUrl);
+
+                  // Chamar a API Serverless para enviar no WhatsApp
+                  const apiResponse = await fetch('/api/send-whatsapp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      name: nameVal,
+                      whatsapp: phoneVal,
+                      seat: seatVal,
+                      ticketCode: ticketCode,
+                      imageUrl: publicUrl
+                    })
+                  });
+                  const apiData = await apiResponse.json();
+                  console.log("Disparo automático do WhatsApp finalizado:", apiData);
+                }
+              }, 'image/png');
+            } catch (err) {
+              console.warn("Erro no processamento do envio automático do ingresso:", err);
+            }
+          }, 800);
+
+          // Configura link de compartilhamento e envio do WhatsApp
           const shareBtn = document.getElementById("whatsapp-share-btn");
-          if (shareBtn) {
-            const newShareBtn = shareBtn.cloneNode(true);
-            shareBtn.parentNode.replaceChild(newShareBtn, shareBtn);
+          const newShareBtn = shareBtn.cloneNode(true);
+          shareBtn.parentNode.replaceChild(newShareBtn, shareBtn);
 
-            newShareBtn.addEventListener("click", (ev) => {
-              ev.preventDefault();
+          newShareBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            const originalContent = newShareBtn.innerHTML;
+            newShareBtn.innerHTML = `<span>Processando ingresso...</span>`;
+            newShareBtn.disabled = true;
+
+            try {
+              const ticketEl = document.getElementById("ticket-wrapper");
+              const originalShadow = ticketEl.querySelector("#event-ticket").style.boxShadow;
+              ticketEl.querySelector("#event-ticket").style.boxShadow = 'none';
+
+              const canvas = await html2canvas(ticketEl, {
+                backgroundColor: '#0B0F19',
+                scale: 2,
+                useCORS: true,
+                logging: false
+              });
+              ticketEl.querySelector("#event-ticket").style.boxShadow = originalShadow;
+
+              const dataUrl = canvas.toDataURL("image/png");
+              const response = await fetch(dataUrl);
+              const blob = await response.blob();
+              const file = new File([blob], `ingresso-epec-${seatVal}.png`, { type: "image/png" });
+
+              // Web Share API (para compartilhar diretamente no WhatsApp no celular)
+              if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                  files: [file],
+                  title: 'Ingresso EPEC',
+                  text: `Olá! Aqui está o meu ingresso para o treinamento O Profissional do Futuro: IA & Aplicações na EPEC. Cadeira ${seatVal}.`
+                });
+              } else {
+                // Fallback (Desktop): baixa a imagem e abre o chat no WhatsApp Web com instruções
+                const link = document.createElement("a");
+                link.download = `ingresso-epec-${nameVal.replace(/\s+/g, '-').toLowerCase()}-${seatVal}.png`;
+                link.href = dataUrl;
+                link.click();
+
+                const cleanPhone = phoneVal.replace(/\D/g, "");
+                const messageText = `Olá! Acabei de garantir minha vaga no treinamento *O Profissional do Futuro: IA & Aplicações* na EPEC! 🎟️
+
+*INGRESSO OFICIAL*
+👤 Nome: ${nameVal}
+🪑 Cadeira: ${seatVal}
+📍 Local: Rua Tabaiares, 360 - Ilha do Retiro (Sebrae Recife)
+📅 Horário: Sábado, às 14:00h
+🔑 Código: ${ticketCode}
+
+*(A imagem do seu ingresso foi baixada automaticamente. Por favor, anexe-a na conversa!)* 🚀`;
+
+                window.open(`https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${encodeURIComponent(messageText)}`, '_blank');
+              }
+            } catch (err) {
+              console.error("Erro ao compartilhar:", err);
+              // Fallback de contingência simples
               const cleanPhone = phoneVal.replace(/\D/g, "");
-              const messageText = `Olá! Acabei de garantir minha vaga no treinamento *O Profissional do Futuro: IA & Aplicações* na EPEC! 🎟️\n\n*INGRESSO OFICIAL*\n👤 Nome: ${nameVal}\n📍 Local: Rua Tabaiares, 360 - Ilha do Retiro (Sebrae Recife)\n📅 Horário: Sábado, às 14:00h\n🔑 Código: ${ticketCode}`;
+              const messageText = `Olá! Acabei de garantir minha vaga no treinamento *O Profissional do Futuro: IA & Aplicações* na EPEC! 🎟️\n\n*INGRESSO OFICIAL*\n👤 Nome: ${nameVal}\n🪑 Cadeira: ${seatVal}\n🔑 Código: ${ticketCode}`;
               window.open(`https://api.whatsapp.com/send?phone=55${cleanPhone}&text=${encodeURIComponent(messageText)}`, '_blank');
+            } finally {
+              newShareBtn.innerHTML = originalContent;
+              newShareBtn.disabled = false;
+            }
+          });
+
+          // Configura download da imagem do ingresso
+          const downloadBtn = document.getElementById("download-ticket-btn");
+          const newDownloadBtn = downloadBtn.cloneNode(true);
+          downloadBtn.parentNode.replaceChild(newDownloadBtn, downloadBtn);
+          
+          newDownloadBtn.addEventListener("click", () => {
+            const ticketEl = document.getElementById("ticket-wrapper");
+            const originalShadow = ticketEl.querySelector("#event-ticket").style.boxShadow;
+            ticketEl.querySelector("#event-ticket").style.boxShadow = 'none';
+            
+            html2canvas(ticketEl, {
+              backgroundColor: '#0B0F19',
+              scale: 2,
+              useCORS: true,
+              logging: false
+            }).then(canvas => {
+              ticketEl.querySelector("#event-ticket").style.boxShadow = originalShadow;
+              const link = document.createElement("a");
+              link.download = `ingresso-epec-${nameVal.replace(/\s+/g, '-').toLowerCase()}-${seatVal}.png`;
+              link.href = canvas.toDataURL("image/png");
+              link.click();
             });
+          });
+
+          // Atualiza botão do assento no grid localmente (se o grid existir)
+          if (seatGridEl) {
+            const bookedBtn = seatGridEl.querySelector(`[data-seat-id="${seatVal}"]`);
+            if (bookedBtn) {
+              bookedBtn.classList.remove("seat-selected", "seat-available");
+              bookedBtn.classList.add("seat-occupied");
+              bookedBtn.disabled = true;
+            }
           }
 
-        } catch (err) {
-          console.error("Erro no envio:", err);
-          alert("Ocorreu um erro ao processar seu cadastro. Por favor, tente novamente.");
-        } finally {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalBtnText;
-        }
-      });
+          if (Array.isArray(availableSeats)) {
+            const idx = availableSeats.indexOf(seatVal);
+            if (idx > -1) availableSeats.splice(idx, 1);
+            currentSeats = availableSeats.length;
+            if (counterEl) counterEl.textContent = currentSeats;
+          }
+
+          if (typeof successModal !== 'undefined' && successModal) {
+            successModal.classList.remove("hidden");
+          }
+          form.reset();
+          if (typeof selectedSeatId !== 'undefined') selectedSeatId = null;
+          if (seatInputEl) seatInputEl.value = "";
 
         } catch (err) {
           console.error("Erro no envio:", err);
