@@ -1175,6 +1175,19 @@
             return;
           }
 
+          // Enviar lead para o Google Sheets (Apps Script Webhook)
+          fetch('https://script.google.com/macros/s/AKfycbzJ2_PSMo0tLrA3quSlMKomG14Ss20hIhoyRPX0cEdGnPcolssB1JHriI_aluYOgiQ/exec', {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              name: nameVal,
+              whatsapp: phoneVal,
+              birthdate: birthdateVal,
+              seat: seatVal
+            })
+          }).catch(e => console.error("Erro Webhook Google Sheets:", e));
+
           // Disparar evento de conversão no Google Analytics
           if (typeof gtag === 'function') {
             gtag('event', 'generate_lead', {
