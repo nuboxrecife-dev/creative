@@ -1137,56 +1137,63 @@
         submitBtn.innerHTML = `<span>Processando...</span>`;
 
         try {
-          // Verificar se o WhatsApp já está cadastrado
-          const { data: dbLeads, error: checkError } = await supabaseClient
-            .from('epec_leads')
-            .select('id, name')
-            .eq('whatsapp', phoneVal)
-            .limit(1);
+          // Tentar verificar e salvar no Supabase (se acessível)
+          try {
+            const { data: dbLeads, error: checkError } = await supabaseClient
+              .from('epec_leads')
+              .select('id, name')
+              .eq('whatsapp', phoneVal)
+              .limit(1);
 
-          if (checkError) {
-            console.error("Erro ao verificar número:", checkError);
-          } else if (dbLeads && dbLeads.length > 0) {
-            alert(`O WhatsApp ${phoneVal} já está cadastrado para o participante "${dbLeads[0].name}". Por favor, utilize outro número.`);
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = originalBtnText;
-            return;
+            if (!checkError && dbLeads && dbLeads.length > 0) {
+              alert(`O WhatsApp ${phoneVal} já está cadastrado para o participante "${dbLeads[0].name}". Por favor, utilize outro número.`);
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnText;
+              return;
+            }
+          } catch (supaCheckErr) {
+            console.warn("Supabase check ignorado por indisponibilidade:", supaCheckErr);
           }
 
-          // Salvar inscrição no Supabase
-          const { error } = await supabaseClient
-            .from('epec_leads')
-            .insert([
-              {
-                name: nameVal,
-                whatsapp: phoneVal,
-                age_group: birthdateVal,
-                seat: seatVal
-              }
-            ]);
+          try {
+            const { error: insertError } = await supabaseClient
+              .from('epec_leads')
+              .insert([
+                {
+                  name: nameVal,
+                  whatsapp: phoneVal,
+                  age_group: birthdateVal,
+                  seat: seatVal
+                }
+              ]);
 
-          if (error) {
-            if (error.code === '23505') {
+            if (insertError && insertError.code === '23505') {
               alert("Esta cadeira acabou de ser reservada por outra pessoa. Por favor, escolha outro assento.");
               await initSeatMap();
-            } else {
-              alert("Erro ao realizar cadastro no banco de dados: " + error.message);
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalBtnText;
+              return;
             }
-            return;
+          } catch (supaInsertErr) {
+            console.warn("Supabase insert ignorado por indisponibilidade:", supaInsertErr);
           }
 
           // Enviar lead para o Google Sheets (Apps Script Webhook)
-          fetch('https://script.google.com/macros/s/AKfycbzJ2_PSMo0tLrA3quSlMKomG14Ss20hIhoyRPX0cEdGnPcolssB1JHriI_aluYOgiQ/exec', {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              name: nameVal,
-              whatsapp: phoneVal,
-              birthdate: birthdateVal,
-              seat: seatVal
-            })
-          }).catch(e => console.error("Erro Webhook Google Sheets:", e));
+          try {
+            fetch('https://script.google.com/macros/s/AKfycbzJ2_PSMo0tLrA3quSlMKomG14Ss20hIhoyRPX0cEdGnPcolssB1JHriI_aluYOgiQ/exec', {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: nameVal,
+                whatsapp: phoneVal,
+                birthdate: birthdateVal,
+                seat: seatVal
+              })
+            }).catch(e => console.error("Erro Webhook Google Sheets:", e));
+          } catch (sheetErr) {
+            console.error("Erro Webhook:", sheetErr);
+          }
 
           // Disparar evento de conversão no Google Analytics
           if (typeof gtag === 'function') {
