@@ -1464,28 +1464,23 @@
         successModal.classList.add("hidden");
       });
 
-      // 7. Real-time Countdown Timer (sessionStorage-persisted CRO trigger)
+      // 7. Real-time Countdown Timer (Encerra 24h antes do evento: 22 de Outubro de 2026 às 10:00h)
       const countdownEl = document.getElementById("countdown-timer");
       if (countdownEl) {
-        let targetTime = sessionStorage.getItem("epec_countdown_target");
-        if (!targetTime) {
-          // Set target to 2 hours and 45 minutes from first load
-          targetTime = Date.now() + (2 * 60 * 60 + 45 * 60) * 1000;
-          sessionStorage.setItem("epec_countdown_target", targetTime);
-        } else {
-          targetTime = parseInt(targetTime, 10);
-        }
+        // Data limite de encerramento das inscrições: 22/10/2026 às 10:00h
+        const targetTime = new Date("2026-10-22T10:00:00-03:00").getTime();
 
         function updateTimer() {
           const now = Date.now();
           const diff = targetTime - now;
 
           if (diff <= 0) {
-            countdownEl.textContent = "00:00:00";
+            countdownEl.textContent = "ENCERRADO";
             return;
           }
 
-          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
           const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
@@ -1493,7 +1488,11 @@
           const mm = String(minutes).padStart(2, '0');
           const ss = String(seconds).padStart(2, '0');
 
-          countdownEl.textContent = `${hh}:${mm}:${ss}`;
+          if (days > 0) {
+            countdownEl.textContent = `${days}d ${hh}:${mm}:${ss}`;
+          } else {
+            countdownEl.textContent = `${hh}:${mm}:${ss}`;
+          }
           requestAnimationFrame(updateTimer);
         }
         updateTimer();
