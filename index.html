@@ -867,22 +867,22 @@
             </div>
             
             <!-- Ticket Details -->
-            <div class="grid grid-cols-2 gap-y-4 gap-x-4 text-xs border-t border-white/5 pt-4">
+            <div class="grid grid-cols-2 gap-y-3 gap-x-3 text-xs border-t border-white/5 pt-3">
               <div>
                 <span class="block text-[9px] text-gray-500 uppercase font-mono tracking-widest">Participante</span>
-                <span id="summary-name" class="font-bold text-white block text-sm leading-normal mt-1">---</span>
+                <span id="summary-name" class="font-bold text-white block text-xs leading-tight mt-1 truncate">---</span>
+              </div>
+              <div>
+                <span class="block text-[9px] text-gray-500 uppercase font-mono tracking-widest">Vaga</span>
+                <span id="summary-seat" class="font-black text-[#00f0ff] uppercase tracking-wider block text-xs mt-1">Garantida</span>
               </div>
               <div>
                 <span class="block text-[9px] text-gray-500 uppercase font-mono tracking-widest">Data & Horário</span>
-                <span class="font-bold text-techPurple block text-[11px] leading-tight mt-1 font-mono">Sex 23/10/2026<br>10:00h às 12:00h</span>
-              </div>
-              <div>
-                <span class="block text-[9px] text-gray-500 uppercase font-mono tracking-widest">Local</span>
-                <span class="font-bold text-gray-200 block text-xs leading-normal mt-1 font-sans">Rua Tabaiares, 360 (Sebrae Recife)</span>
+                <span class="font-bold text-techPurple block text-[10px] leading-tight mt-0.5 font-mono">23/10 • 10h às 12h</span>
               </div>
               <div>
                 <span class="block text-[9px] text-gray-500 uppercase font-mono tracking-widest">WhatsApp</span>
-                <span id="summary-phone" class="font-bold text-gray-200 block text-xs leading-normal mt-1 font-sans">---</span>
+                <span id="summary-phone" class="font-bold text-gray-200 block text-xs leading-tight mt-1 font-sans truncate">---</span>
               </div>
             </div>
           </div>
@@ -1269,11 +1269,18 @@
           localStorage.setItem("epec_leads", JSON.stringify(existingLeads));
 
           const ticketCode = `EPEC-${seatVal.replace("-", "")}-${Math.floor(1000 + Math.random() * 9000)}`;
-          document.getElementById("ticket-code").textContent = ticketCode;
+          
+          const ticketCodeEl = document.getElementById("ticket-code");
+          if (ticketCodeEl) ticketCodeEl.textContent = ticketCode;
 
-          document.getElementById("summary-name").textContent = nameVal;
-          document.getElementById("summary-phone").textContent = phoneVal;
-          document.getElementById("summary-seat").textContent = seatVal;
+          const summaryNameEl = document.getElementById("summary-name");
+          if (summaryNameEl) summaryNameEl.textContent = nameVal;
+
+          const summaryPhoneEl = document.getElementById("summary-phone");
+          if (summaryPhoneEl) summaryPhoneEl.textContent = phoneVal;
+
+          const summarySeatEl = document.getElementById("summary-seat");
+          if (summarySeatEl) summarySeatEl.textContent = seatVal;
 
           // Disparo automático do WhatsApp em segundo plano
           setTimeout(async () => {
