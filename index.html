@@ -213,19 +213,21 @@
           <a href="#faq" class="hover:text-epecBlue transition duration-200">Dúvidas</a>
         </nav>
         
-        <!-- Right side badge & CTA -->
-        <div class="flex items-center gap-4">
-          <!-- Counter Badge -->
-          <div class="flex items-center gap-2 bg-[#151B2C]/80 border border-white/10 px-3.5 py-1.5 rounded-full backdrop-blur-md text-xs">
-            <span class="text-[10px] text-gray-400 font-medium hidden sm:inline">Vagas Restantes:</span>
-            <span id="vagas-contador" class="font-bold text-red-500 animate-pulse">8</span>
-            <span class="text-gray-500">/ 220</span>
-          </div>
-          <!-- Header CTA -->
-          <a href="#inscricao" class="hidden sm:inline-flex bg-epecBlue hover:bg-[#003be0] text-white text-xs font-bold px-4 py-2 rounded-lg transition duration-200 shadow-[0_0_10px_rgba(0,71,255,0.2)]">
-            Garantir Vaga
-          </a>
+          <!-- Mobile Menu Toggle Button -->
+          <button id="mobile-menu-btn" aria-label="Menu" class="md:hidden flex items-center justify-center p-2 rounded-xl bg-white/5 border border-white/10 text-gray-300 hover:text-white hover:bg-white/10 transition">
+            <svg id="menu-icon-bars" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            <svg id="menu-icon-close" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
         </div>
+      </div>
+
+      <!-- Mobile Navigation Drawer -->
+      <div id="mobile-drawer" class="hidden md:hidden border-t border-white/5 bg-[#0B0F19]/95 backdrop-blur-xl px-6 py-4 space-y-3 text-xs font-bold text-gray-200">
+        <a href="#simulador-ia" class="mobile-link block py-2 border-b border-white/5 hover:text-epecBlue transition">Simulador IA</a>
+        <a href="#beneficios" class="mobile-link block py-2 border-b border-white/5 hover:text-epecBlue transition">Benefícios Módulos</a>
+        <a href="#cronograma" class="mobile-link block py-2 border-b border-white/5 hover:text-epecBlue transition">Cronograma do Evento</a>
+        <a href="#faq" class="mobile-link block py-2 border-b border-white/5 hover:text-epecBlue transition">Dúvidas Frequentes</a>
+        <a href="#inscricao" class="mobile-link block w-full text-center bg-epecBlue hover:bg-[#003be0] text-white font-bold py-3 rounded-xl transition shadow-[0_0_15px_rgba(0,71,255,0.3)]">Garantir Vaga Presencial</a>
       </div>
     </header>
 
@@ -967,6 +969,33 @@
         }
         e.target.value = value;
       });
+
+      // 1.1 Mobile Menu Navigation Drawer Toggle
+      const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+      const mobileDrawer = document.getElementById("mobile-drawer");
+      const menuIconBars = document.getElementById("menu-icon-bars");
+      const menuIconClose = document.getElementById("menu-icon-close");
+
+      if (mobileMenuBtn && mobileDrawer) {
+        mobileMenuBtn.addEventListener("click", () => {
+          mobileDrawer.classList.toggle("hidden");
+          if (menuIconBars && menuIconClose) {
+            menuIconBars.classList.toggle("hidden");
+            menuIconClose.classList.toggle("hidden");
+          }
+        });
+
+        // Close mobile menu when clicking any nav link
+        document.querySelectorAll(".mobile-link").forEach(link => {
+          link.addEventListener("click", () => {
+            mobileDrawer.classList.add("hidden");
+            if (menuIconBars && menuIconClose) {
+              menuIconBars.classList.remove("hidden");
+              menuIconClose.classList.add("hidden");
+            }
+          });
+        });
+      }
 
       // 2. Seat Map Initialization (Calculates available count and auto-assigns hidden seat)
       const seatGridEl = document.getElementById("seat-grid");

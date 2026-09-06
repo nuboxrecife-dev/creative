@@ -384,3 +384,79 @@ input:focus, select:focus {
     inset 0 1px 1px rgba(255, 255, 255, 0.08);
   transform: translateY(-2px) scale(1.01);
 }
+
+/* ==========================================================================
+   RESPONSIVE FINE-TUNING & DEVICE ADAPTATION RULES
+   ========================================================================== */
+
+/* Mobile Phones (max-width: 640px) */
+@media (max-width: 640px) {
+  /* Scale background glows for mobile GPU performance and zero overflow */
+  .bg-glow-blue, .bg-glow-purple {
+    width: 280px !important;
+    height: 280px !important;
+    filter: blur(45px) !important;
+    opacity: 0.35 !important;
+  }
+
+  /* Prevent automatic iOS Safari zoom when clicking form inputs */
+  input[type="text"],
+  input[type="tel"],
+  input[type="date"],
+  input[type="email"],
+  select {
+    font-size: 16px !important;
+    min-height: 48px !important;
+  }
+
+  /* Touch Target Optimizations */
+  button, .btn-pulse, a.mobile-nav-link {
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  /* Compact section padding for tighter mobile layout */
+  section {
+    padding-top: 3.5rem !important;
+    padding-bottom: 3.5rem !important;
+  }
+
+  /* Timeline adjustments for mobile */
+  .timeline-connector {
+    margin-left: 0.75rem !important;
+  }
+  .timeline-connector > div {
+    padding-left: 1.5rem !important;
+  }
+
+  /* Ticket modal mobile responsiveness */
+  #success-modal > div {
+    max-width: 100% !important;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  #event-ticket {
+    font-size: 0.9em;
+  }
+}
+
+/* Tablets (min-width: 641px) and (max-width: 1024px) */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .bg-glow-blue, .bg-glow-purple {
+    width: 450px !important;
+    height: 450px !important;
+    filter: blur(70px) !important;
+  }
+
+  section {
+    padding-top: 4.5rem !important;
+    padding-bottom: 4.5rem !important;
+  }
+}
+
+/* High-resolution & Wide screens (min-width: 1280px) */
+@media (min-width: 1280px) {
+  .neon-border:hover {
+    transform: translateY(-10px);
+  }
+}
