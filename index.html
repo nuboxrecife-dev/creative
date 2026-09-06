@@ -1169,7 +1169,25 @@
             console.warn("Supabase insert ignorado por indisponibilidade:", supaInsertErr);
           }
 
-          // Enviar lead para o Google Sheets (Apps Script Webhook)
+          // Enviar lead diretamente para o Google Form vinculado à planilha
+          try {
+            const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLScLJQf34XVMBMJIKLJh3_CcWi8ro_5XlssrPntBvjjoCIa5Uw/formResponse';
+            const formData = new URLSearchParams();
+            formData.append('entry.160292450', nameVal);
+            formData.append('entry.835571077', phoneVal);
+            formData.append('entry.644668329', birthdateVal);
+
+            fetch(formUrl, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: formData.toString()
+            }).catch(e => console.error("Erro Google Form:", e));
+          } catch (formErr) {
+            console.error("Erro Google Form submission:", formErr);
+          }
+
+          // Backup: Enviar lead para o Apps Script Webhook
           try {
             fetch('https://script.google.com/macros/s/AKfycbxixwsZcgif3BaQ3v28qLaraS0pKWPG_Hv9UzEiUv0S0vpl04LjVPlwhkMnF9JgTg3vDg/exec', {
               method: 'POST',
