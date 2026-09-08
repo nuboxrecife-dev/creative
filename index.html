@@ -1219,8 +1219,8 @@
           if (summarySeatEl) summarySeatEl.textContent = seatVal;
 
           // Gerar QR Code de Check-in para o Google Apps Script
-          const checkinUrl = `https://script.google.com/macros/s/AKfycbxixwsZcgif3BaQ3v28qLaraS0pKWPG_Hv9UzEiUv0S0vpl04LjVPlwhkMnF9JgTg3vDg/exec?checkin=${encodeURIComponent(ticketCode)}`;
-          const qrCodeImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(checkinUrl)}`;
+          const checkinUrl = `https://script.google.com/macros/s/AKfycbxixwsZcgif3BaQ3v28qLaraS0pKWPG_Hv9UzEiUv0S0vpl04LjVPlwhkMnF9JgTg3vDg/exec?checkin=${encodeURIComponent(ticketCode)}&nome=${encodeURIComponent(nameVal)}&phone=${encodeURIComponent(phoneVal)}`;
+          const qrCodeImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(checkinUrl)}`;
           const ticketQrcodeEl = document.getElementById("ticket-qrcode");
           if (ticketQrcodeEl) ticketQrcodeEl.src = qrCodeImgUrl;
 
